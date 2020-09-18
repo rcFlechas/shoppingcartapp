@@ -19,15 +19,6 @@ android {
     }
 
     buildTypes {
-        Properties properties = new Properties()
-        properties.load(project.rootProject.file("local.properties").newDataInputStream())
-        def tmdbApiKey = properties.getProperty("tmdb_api_key", "")
-
-        debug {
-            buildConfigField 'String', "TMDB_API_KEY", tmdbApiKey
-            resValue 'string', "api_key", tmdbApiKey
-        }
-
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

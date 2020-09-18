@@ -14,10 +14,6 @@ data class Movie(
     @field:Json(name = "movi_id")
     val id: Int = 0,
 
-    @ColumnInfo(name = "moca_id")
-    @field:Json(name = "moca_id")
-    val movieCartId: Int = 0,
-
     @ColumnInfo(name = "movi_title")
     @field:Json(name = "movi_title")
     val title: String = String(),

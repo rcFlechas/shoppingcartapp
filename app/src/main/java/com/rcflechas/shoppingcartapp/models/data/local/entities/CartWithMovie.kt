@@ -4,14 +4,13 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 
-data class MovieCart (
+data class CartWithMovie (
 
     @Embedded val cart: Cart,
-
     @Relation(
         parentColumn = "cart_id",
-        entityColumn = "movi_id",
-        associateBy = Junction(MovieCartCrossRef::class)
+        entityColumn = "camo_id",
+        associateBy = Junction(CartMovieCrossRef::class)
     )
-    val movies: List<Movie>
+    val cartMovies: List<CartMovie>
 )

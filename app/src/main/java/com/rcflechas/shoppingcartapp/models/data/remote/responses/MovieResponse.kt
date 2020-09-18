@@ -1,6 +1,8 @@
 package com.rcflechas.shoppingcartapp.models.data.remote.responses
 
 import androidx.annotation.Keep
+import com.rcflechas.shoppingcartapp.models.data.local.entities.Movie
+import com.rcflechas.shoppingcartapp.views.binds.MovieBind
 import com.squareup.moshi.Json
 import java.io.Serializable
 
@@ -33,7 +35,7 @@ data class MovieResponse(
 
     @Json(name = "genre_ids")
     @field:Json(name = "genre_ids")
-    val genreIds: List<Int> = listOf(),
+    val genreIds: Array<Int>,
 
     @Json(name = "original_title")
     @field:Json(name = "original_title")
@@ -49,7 +51,7 @@ data class MovieResponse(
 
     @Json(name = "popularity")
     @field:Json(name = "popularity")
-    val popularity: Long = 0,
+    val popularity: Double = 0.0,
 
     @Json(name = "vote_count")
     @field:Json(name = "vote_count")
@@ -61,5 +63,44 @@ data class MovieResponse(
 
     @Json(name = "vote_average")
     @field:Json(name = "vote_average")
-    val voteAverage: Long = 0
-): Serializable
+    val voteAverage: Double = 0.0
+): Serializable {
+    companion object {
+
+        fun mapperMovieResponseToMovieBindList(movies: List<MovieResponse>): List<MovieBind> {
+
+            val list = mutableListOf<MovieBind>()
+            movies.forEach {
+                list.add(
+                    MovieBind(
+                        id = it.id,
+                        title = it.title,
+                        overView = it.overView,
+                        posterPath = it.posterPath,
+                        backdropPath = it.backdropPath,
+                        isAdult = it.isAdult
+                    )
+                )
+            }
+            return list.toList()
+        }
+
+        fun mapperMovieResponseToMovieEntityList(movies: List<MovieResponse>): List<Movie> {
+
+            val list = mutableListOf<Movie>()
+            movies.forEach {
+                list.add(
+                    Movie(
+                        id = it.id,
+                        title = it.title,
+                        overView = it.overView,
+                        posterPath = it.posterPath,
+                        backdropPath = it.backdropPath,
+                        isAdult = it.isAdult
+                    )
+                )
+            }
+            return list.toList()
+        }
+    }
+}
