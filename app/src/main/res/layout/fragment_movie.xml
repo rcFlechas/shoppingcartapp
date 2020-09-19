@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.ui.fragments.PostsFragment">
+    android:background="@color/gray_EEEEEE"
+    android:backgroundTint="@color/gray_EEEEEE"
+    tools:context=".views.ui.fragments.MovieFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/containerToolbar"
@@ -29,14 +31,14 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/postsListRecyclerView"
+        android:id="@+id/moviesRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/containerToolbar"
-        tools:listitem="@layout/item_post" />
+        tools:listitem="@layout/item_movie" />
 
     <ProgressBar
         android:id="@+id/progressBar"

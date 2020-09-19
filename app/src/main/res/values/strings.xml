@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">ShoppingCartApp</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="message_connection_error">Verify your internet connection please</string>
+    <string name="message_loading">Loading</string>
+    <string name="message_list_empty">List Empty</string>
+    <string name="deleting">Deleting</string>
 </resources>

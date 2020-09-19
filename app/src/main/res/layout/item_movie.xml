@@ -1,6 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-</com.google.android.material.card.MaterialCardView>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/movieImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/dimen_8dp"
+            android:layout_marginHorizontal="@dimen/dimen_8dp"
+            android:src="@drawable/ic_launcher_background"/>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dimen_8dp"
+            android:layout_marginVertical="@dimen/dimen_8dp"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/titleMovieTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/gray_4B4949"
+                android:textStyle="bold"
+                tools:text="Cur nuclear vexatum iacere peregrinationes?" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/overViewMovieTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_8dp"
+                android:textColor="@color/gray_959595"
+                android:textStyle="bold"
+                android:maxLines="4"
+                app:autoSizeMaxTextSize="@dimen/dimen_9sp"
+                app:autoSizeMinTextSize="@dimen/dimen_16sp"
+                tools:text="Cur nuclear vexatum iacere peregrinationes Detriuss experimentum, Cur nuclear vexatum iacere peregrinationes Detriuss experimentum, Cur nuclear vexatum iacere peregrinationes Detriuss experimentum, Cur nuclear vexatum iacere peregrinationes Detriuss experimentum, tanquam varius cobaltum.A falsis, habitio raptus abactor.?" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</FrameLayout>
