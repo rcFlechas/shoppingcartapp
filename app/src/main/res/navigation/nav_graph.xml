@@ -12,5 +12,15 @@
         android:label="fragment_movie"
         tools:layout="@layout/fragment_movie" >
 
+        <action
+            android:id="@+id/action_movieFragment_to_cartFragment"
+            app:destination="@id/cartFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.rcflechas.shoppingcartapp.views.ui.fragments.CartFragment"
+        android:label="fragment_cart"
+        tools:layout="@layout/fragment_cart" >
     </fragment>
 </navigation>

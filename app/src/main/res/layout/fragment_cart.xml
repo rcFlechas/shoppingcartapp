@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/gray_EEEEEE"
     android:backgroundTint="@color/gray_EEEEEE"
-    tools:context=".views.ui.fragments.MovieFragment">
+    tools:context=".views.ui.fragments.CartFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/containerToolbar"
@@ -25,7 +25,7 @@
             android:background="?attr/colorPrimary"
             android:gravity="start"
             android:fitsSystemWindows="true"
-            app:popupTheme="@style/AppTheme.AppBarOverlay">
+            app:popupTheme="@style/AppTheme.PopupOverlay">
 
         </androidx.appcompat.widget.Toolbar>
 
