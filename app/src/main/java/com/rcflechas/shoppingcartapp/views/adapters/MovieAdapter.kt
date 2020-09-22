@@ -66,6 +66,12 @@ class MovieAdapter (val clickClosure: (MovieBind) -> Unit) : CustomAdapter<Movie
         }
 
         fun bindClick(movie: MovieBind) {
+
+            itemView.addMaterialButton.onClick {
+                itemView.addLinearLayoutCompat.visibility = View.GONE
+                itemView.addRemoveLinearLayoutCompat.visibility = View.VISIBLE
+            }
+
             itemView.onClick {
                 clickClosure(movie)
             }

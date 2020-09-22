@@ -5,4 +5,6 @@
     <string name="message_loading">Loading</string>
     <string name="message_list_empty">List Empty</string>
     <string name="deleting">Deleting</string>
+
+    <string name="title_cart">Cart</string>
 </resources>

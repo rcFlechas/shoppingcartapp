@@ -43,7 +43,7 @@ class MovieFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initUI()
-        /*setupToolbar()*/
+        setupToolbar()
         //movieViewModel.getAllRemote()
     }
 
@@ -92,6 +92,20 @@ class MovieFragment : Fragment() {
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(moviesRecyclerView)
+    }
+
+    private fun setupToolbar() {
+        toolbar.setTitle(R.string.app_name)
+        toolbar.inflateMenu(R.menu.menu)
+
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.menu_main_cart -> {
+//                    findNavController().navigate(R.id.action_postsFragment_to_favoritePostsFragment)
+                }
+            }
+            true
+        }
     }
 
     private fun setupHandler() {
