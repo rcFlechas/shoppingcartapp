@@ -15,6 +15,10 @@
         <action
             android:id="@+id/action_movieFragment_to_cartFragment"
             app:destination="@id/cartFragment" />
+
+        <action
+            android:id="@+id/action_movieFragment_to_movieDetailFragmentDialog"
+            app:destination="@id/movieDetailFragmentDialog" />
     </fragment>
 
     <fragment
@@ -22,5 +26,15 @@
         android:name="com.rcflechas.shoppingcartapp.views.ui.fragments.CartFragment"
         android:label="fragment_cart"
         tools:layout="@layout/fragment_cart" >
+
+        <action
+            android:id="@+id/action_cartFragment_to_movieDetailFragmentDialog"
+            app:destination="@id/movieDetailFragmentDialog" />
     </fragment>
+
+    <dialog
+        android:id="@+id/movieDetailFragmentDialog"
+        android:name="com.rcflechas.shoppingcartapp.views.ui.fragments.MovieDetailDialogFragment"
+        android:label="fragment_movie_detail_dialog"
+        tools:layout="@layout/fragment_movie_detail_dialog"/>
 </navigation>

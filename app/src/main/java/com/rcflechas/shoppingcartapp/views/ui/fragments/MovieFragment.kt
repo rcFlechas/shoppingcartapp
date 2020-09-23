@@ -53,7 +53,8 @@ class MovieFragment : Fragment() {
         movieAdapter = MovieAdapter { post ->
 
             /*val bundle = bundleOf("post" to post)
-            findNavController().navigate(R.id.detailFragment, bundle)*/
+            findNavController().navigate(R.id.action_movieFragment_to_movieDetailFragmentDialog, bundle)*/
+            findNavController().navigate(R.id.action_movieFragment_to_movieDetailFragmentDialog)
         }
 
         movieAdapter.setHasStableIds(true)

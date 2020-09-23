@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -57,6 +58,7 @@ class CartFragment : Fragment() {
 
             /*val bundle = bundleOf("post" to post)
             findNavController().navigate(R.id.detailFragment, bundle)*/
+            findNavController().navigate(R.id.action_cartFragment_to_movieDetailFragmentDialog)
         }
 
         movieAdapter.setHasStableIds(true)

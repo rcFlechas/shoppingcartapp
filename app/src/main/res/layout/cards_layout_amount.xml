@@ -1,0 +1,56 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_overlap_top"
+    style="@style/CardMovie"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@drawable/shape_parrafo">
+
+        <TextView
+            android:id="@+id/tvDetailConferenceHour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textSize="15sp"
+            android:textColor="@color/colorPrimary"
+            android:gravity="center_horizontal"
+            android:layout_margin="5dp"/>
+        <TextView
+            android:id="@+id/tvDetailConferenceSpeaker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre Expositor"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:gravity="center_horizontal"
+            android:layout_margin="5dp"/>
+        <TextView
+            android:id="@+id/tvDetailConferenceTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tag"
+            android:layout_gravity="center_horizontal"
+            android:textSize="12sp"
+            android:textColor="#FFF"
+            android:gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:background="@drawable/shape_topico"/>
+
+        <TextView
+            android:id="@+id/tvDetailConferenceDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Detalle de la conferencia"
+            android:textSize="15sp"
+            android:textColor="@color/colorPrimary"
+            android:gravity="center_horizontal"
+            android:layout_margin="5dp"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_EEEEEE"
-    android:backgroundTint="@color/gray_EEEEEE"
+    style="@style/backgroundView"
     tools:context=".views.ui.fragments.MovieFragment">
 
     <com.google.android.material.appbar.AppBarLayout
