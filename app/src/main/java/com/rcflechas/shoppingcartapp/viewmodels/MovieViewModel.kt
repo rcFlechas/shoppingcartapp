@@ -3,6 +3,7 @@ package com.rcflechas.shoppingcartapp.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.rcflechas.shoppingcartapp.models.data.local.entities.Movie
 import com.rcflechas.shoppingcartapp.models.data.remote.responses.MovieResponse
 import com.rcflechas.shoppingcartapp.models.repositories.CartRepository
 import com.rcflechas.shoppingcartapp.models.repositories.MovieRepository
@@ -15,10 +16,10 @@ import io.reactivex.schedulers.Schedulers
 class MovieViewModel (private val movieRepository: MovieRepository, private val cartRepository: CartRepository) : ViewModel() {
 
 
-    private val movieListRemoteMutableLiveData: MutableLiveData<Event<UIState>> = MutableLiveData()
+    private val movieListMutableLiveData: MutableLiveData<Event<UIState>> = MutableLiveData()
 
 
-    fun getMovieListRemoteLiveData(): LiveData<Event<UIState>> = movieListRemoteMutableLiveData
+    fun getMovieListLiveData(): LiveData<Event<UIState>> = movieListMutableLiveData
 
     private val subscriptions = CompositeDisposable()
 
@@ -28,16 +29,41 @@ class MovieViewModel (private val movieRepository: MovieRepository, private val 
         subscriptions.add(
             movieRepository.getAllRemote()
                 .doOnSubscribe {
-                    movieListRemoteMutableLiveData.postValue(Event(UIState.Loading))
+                    movieListMutableLiveData.postValue(Event(UIState.Loading))
                 }
                 .subscribeOn(Schedulers.io())
                 .subscribeBy(
                     onSuccess = {
                         movieRepository.insertAllLocal(MovieResponse.mapperMovieResponseToMovieEntityList(it.results))
-                        movieListRemoteMutableLiveData.postValue(Event(UIState.Success(MovieResponse.mapperMovieResponseToMovieBindList(it.results))))
+                        movieListMutableLiveData.postValue(Event(UIState.Success(MovieResponse.mapperMovieResponseToMovieBindList(it.results))))
                     },
                     onError = {
-                        movieListRemoteMutableLiveData.postValue(
+                        movieListMutableLiveData.postValue(
+                            Event(
+                                UIState.Error(
+                                    it.message
+                                        ?: "Error"
+                                )
+                            )
+                        )
+                    }
+                )
+        )
+    }
+
+    fun getAllLocal() {
+
+        subscriptions.add(
+            movieRepository.getAllLocal()
+                .doOnSubscribe {
+                    movieListMutableLiveData.postValue(Event(UIState.Loading))
+                }.subscribeOn(Schedulers.io())
+                .subscribeBy(
+                    onNext = {
+                        movieListMutableLiveData.postValue(Event(UIState.Success(Movie.mapperMovieToMovieBindList(it))))
+                    },
+                    onError = {
+                        movieListMutableLiveData.postValue(
                             Event(
                                 UIState.Error(
                                     it.message

@@ -1,18 +1,19 @@
 package com.rcflechas.shoppingcartapp.views.ui.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rcflechas.shoppingcartapp.R
+import com.rcflechas.shoppingcartapp.core.isConnect
 import com.rcflechas.shoppingcartapp.utilities.UIState
 import com.rcflechas.shoppingcartapp.viewmodels.MovieViewModel
 import com.rcflechas.shoppingcartapp.views.adapters.MovieAdapter
@@ -46,15 +47,20 @@ class MovieFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        movieViewModel.getAllRemote()
+
+        val isConnect = context?.isConnect() ?: false
+        if (isConnect) {
+            movieViewModel.getAllRemote()
+        } else {
+            movieViewModel.getAllLocal()
+        }
     }
 
     private fun initUI() {
-        movieAdapter = MovieAdapter { post ->
+        movieAdapter = MovieAdapter {
 
-            /*val bundle = bundleOf("post" to post)
-            findNavController().navigate(R.id.action_movieFragment_to_movieDetailFragmentDialog, bundle)*/
-            findNavController().navigate(R.id.action_movieFragment_to_movieDetailFragmentDialog)
+            val bundle = bundleOf("movie" to it)
+            findNavController().navigate(R.id.action_movieFragment_to_movieDetailFragmentDialog, bundle)
         }
 
         movieAdapter.setHasStableIds(true)
@@ -82,7 +88,7 @@ class MovieFragment : Fragment() {
 
     private fun setupHandler() {
 
-        movieViewModel.getMovieListRemoteLiveData().observe(this, Observer { event ->
+        movieViewModel.getMovieListLiveData().observe(this, Observer { event ->
 
             event.getContentIfNotHandled()?.let { status ->
 

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -54,11 +55,11 @@ class CartFragment : Fragment() {
     }
 
     private fun initUI() {
-        movieAdapter = MovieAdapter { post ->
 
-            /*val bundle = bundleOf("post" to post)
-            findNavController().navigate(R.id.detailFragment, bundle)*/
-            findNavController().navigate(R.id.action_cartFragment_to_movieDetailFragmentDialog)
+        movieAdapter = MovieAdapter {
+
+            val bundle = bundleOf("movie" to it)
+            findNavController().navigate(R.id.action_cartFragment_to_movieDetailFragmentDialog, bundle)
         }
 
         movieAdapter.setHasStableIds(true)
@@ -109,7 +110,7 @@ class CartFragment : Fragment() {
 
     private fun setupHandler() {
 
-        movieViewModel.getMovieListRemoteLiveData().observe(this, Observer { event ->
+        movieViewModel.getMovieListLiveData().observe(this, Observer { event ->
 
             event.getContentIfNotHandled()?.let { status ->
 

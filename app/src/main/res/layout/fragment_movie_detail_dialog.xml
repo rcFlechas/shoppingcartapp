@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     style="@style/backgroundView">
@@ -42,28 +43,29 @@
                     android:layout_height="200dp">
 
                     <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/movieImageView"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_launcher_foreground"
-                        android:scaleType="centerCrop"/>
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        tools:src="@drawable/ic_launcher_foreground" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/colorPrimary"
-                        android:alpha="0.5"/>
+                        android:alpha="0.1"/>
 
-                    <TextView
-                        android:id="@+id/tvItemScheduleTituloConferencia"
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/titleTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Titulo de la conferencia"
                         android:textSize="25sp"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold"
                         android:layout_margin="20dp"
                         android:gravity="center_horizontal"
-                        android:layout_centerInParent="true"/>
+                        android:layout_centerInParent="true"
+                        tools:text="Titulo de la conferencia"/>
                 </RelativeLayout>
 
                 <include layout="@layout/cards_layout_description" />

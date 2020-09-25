@@ -3,6 +3,8 @@ package com.rcflechas.shoppingcartapp.models.data.local.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.rcflechas.shoppingcartapp.models.data.remote.responses.MovieResponse
+import com.rcflechas.shoppingcartapp.views.binds.MovieBind
 import com.squareup.moshi.Json
 import java.io.Serializable
 
@@ -33,4 +35,26 @@ data class Movie(
     @ColumnInfo(name = "movi_isadult")
     @field:Json(name = "movi_isadult")
     val isAdult: Boolean = false
-): Serializable
+): Serializable {
+
+    companion object {
+
+        fun mapperMovieToMovieBindList(movies: List<Movie>): List<MovieBind> {
+
+            val list = mutableListOf<MovieBind>()
+            movies.forEach {
+                list.add(
+                    MovieBind(
+                        id = it.id,
+                        title = it.title,
+                        overView = it.overView,
+                        posterPath = it.posterPath,
+                        backdropPath = it.backdropPath,
+                        isAdult = it.isAdult
+                    )
+                )
+            }
+            return list.toList()
+        }
+    }
+}

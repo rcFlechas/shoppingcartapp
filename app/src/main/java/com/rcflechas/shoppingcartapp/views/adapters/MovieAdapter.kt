@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
 import com.rcflechas.shoppingcartapp.R
 import com.rcflechas.shoppingcartapp.core.onClick
+import com.rcflechas.shoppingcartapp.core.setImageByUrl
 import com.rcflechas.shoppingcartapp.models.data.remote.rest.TheMovieDB
 import com.rcflechas.shoppingcartapp.views.binds.MovieBind
 import com.rcflechas.shoppingcartapp.views.widget.GlideApp
@@ -60,7 +61,11 @@ class MovieAdapter (val clickClosure: (MovieBind) -> Unit) : CustomAdapter<Movie
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(movie: MovieBind) {
-            setImageForUrl(movie.posterPath, itemView)
+
+            itemView.movieImageView.setImageByUrl(
+                url = "${TheMovieDB.URL_IMAGE_W780}${movie.posterPath}",
+                options = RequestOptions().centerCrop()
+            )
             itemView.titleMovieTextView.text = movie.title
             itemView.overViewMovieTextView.text = movie.overView
         }
@@ -76,17 +81,5 @@ class MovieAdapter (val clickClosure: (MovieBind) -> Unit) : CustomAdapter<Movie
                 clickClosure(movie)
             }
         }
-    }
-
-    private fun setImageForUrl(url: String, itemView: View) {
-        val options = RequestOptions()
-            .centerCrop()
-
-        GlideApp.with(itemView.context)
-            .load("${TheMovieDB.URL_IMAGE_W92}${url}")
-            .placeholder(R.drawable.ic_launcher_background)
-            .error(R.drawable.ic_launcher_background)
-            .apply(options)
-            .into(itemView.movieImageView)
     }
 }
