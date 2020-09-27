@@ -13,7 +13,10 @@ import com.rcflechas.shoppingcartapp.views.binds.MovieBind
 import com.rcflechas.shoppingcartapp.views.widget.GlideApp
 import kotlinx.android.synthetic.main.item_movie.view.*
 
-class MovieAdapter (val clickClosure: (MovieBind) -> Unit) : CustomAdapter<MovieBind, MovieAdapter.ViewHolder>() {
+class MovieAdapter (
+    val clickClosure: (MovieBind) -> Unit,
+    val addClosure: (MovieBind, Int) -> Unit
+) : CustomAdapter<MovieBind, MovieAdapter.ViewHolder>() {
 
     private var dataItems = arrayListOf<MovieBind>()
 
@@ -75,6 +78,8 @@ class MovieAdapter (val clickClosure: (MovieBind) -> Unit) : CustomAdapter<Movie
             itemView.addMaterialButton.onClick {
                 itemView.addLinearLayoutCompat.visibility = View.GONE
                 itemView.addRemoveLinearLayoutCompat.visibility = View.VISIBLE
+
+                addClosure(movie, itemView.countTextView.text.toString().toInt())
             }
 
             itemView.onClick {

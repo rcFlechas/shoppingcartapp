@@ -17,9 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.rcflechas.shoppingcartapp.R
+import com.rcflechas.shoppingcartapp.models.data.local.entities.CartWithMovie
 import com.rcflechas.shoppingcartapp.utilities.UIState
+import com.rcflechas.shoppingcartapp.viewmodels.CartViewModel
 import com.rcflechas.shoppingcartapp.viewmodels.MovieViewModel
 import com.rcflechas.shoppingcartapp.views.adapters.MovieAdapter
+import com.rcflechas.shoppingcartapp.views.binds.CartBind
+import com.rcflechas.shoppingcartapp.views.binds.CartWithMovieBind
 import com.rcflechas.shoppingcartapp.views.binds.MovieBind
 import com.rcflechas.shoppingcartapp.views.widget.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.empty_view.*
@@ -28,7 +32,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CartFragment : Fragment() {
 
-    private val movieViewModel: MovieViewModel by viewModel()
+    private val cartViewModel: CartViewModel by viewModel()
     private lateinit var  movieAdapter: MovieAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,21 +50,22 @@ class CartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initUI()
         setupToolbar()
-        movieViewModel.getAllRemote()
+        cartViewModel.getCartWithMovieLocal()
     }
 
     override fun onResume() {
         super.onResume()
-        movieViewModel.getAllRemote()
+        cartViewModel.getCartWithMovieLocal()
     }
 
     private fun initUI() {
 
-        movieAdapter = MovieAdapter {
-
+        movieAdapter = MovieAdapter(clickClosure = {
             val bundle = bundleOf("movie" to it)
             findNavController().navigate(R.id.action_cartFragment_to_movieDetailFragmentDialog, bundle)
-        }
+        }, addClosure = { movie, amount ->
+
+        })
 
         movieAdapter.setHasStableIds(true)
         moviesRecyclerView.apply {
@@ -110,7 +115,7 @@ class CartFragment : Fragment() {
 
     private fun setupHandler() {
 
-        movieViewModel.getMovieListLiveData().observe(this, Observer { event ->
+        cartViewModel.getCartWithMovieListLiveData().observe(this, { event ->
 
             event.getContentIfNotHandled()?.let { status ->
 
@@ -122,12 +127,12 @@ class CartFragment : Fragment() {
                     }
                     is UIState.Success<*> -> {
 
-                        val data = status.data as MutableList<MovieBind>
-                        Log.i(MovieFragment.TAG, "--- Success...")
+                        val data = status.data as MutableList<CartWithMovieBind>
+                        Log.i(TAG, "--- Success...")
                         if (data.count() != 0) {
 
                             includeEmptyView.visibility = View.GONE
-                            movieAdapter.setData(data)
+                            movieAdapter.setData(CartWithMovieBind.getMovies(data) as MutableList<MovieBind>)
                         } else {
 
                             includeEmptyView.visibility = View.VISIBLE
@@ -138,7 +143,7 @@ class CartFragment : Fragment() {
 
                         includeEmptyView.visibility = View.VISIBLE
                         loadingTextView.text = getString(R.string.message_connection_error)
-                        Log.i(MovieFragment.TAG, "--- ${status.message}")
+                        Log.i(TAG, "--- ${status.message}")
                     }
                 }
             }

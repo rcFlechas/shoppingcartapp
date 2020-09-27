@@ -5,11 +5,9 @@ import androidx.room.RoomDatabase
 import com.rcflechas.shoppingcartapp.models.data.local.dao.CartDAO
 import com.rcflechas.shoppingcartapp.models.data.local.dao.MovieDAO
 import com.rcflechas.shoppingcartapp.models.data.local.entities.Cart
-import com.rcflechas.shoppingcartapp.models.data.local.entities.CartMovie
-import com.rcflechas.shoppingcartapp.models.data.local.entities.CartMovieCrossRef
 import com.rcflechas.shoppingcartapp.models.data.local.entities.Movie
 
-@Database(entities = [Movie::class, Cart::class, CartMovie::class, CartMovieCrossRef::class], version = 1)
+@Database(entities = [Movie::class, Cart::class], version = 1)
 abstract class DataBase : RoomDatabase() {
 
     abstract fun movieDAO(): MovieDAO

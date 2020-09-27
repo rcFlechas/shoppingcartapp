@@ -19,6 +19,7 @@ import com.rcflechas.shoppingcartapp.core.setBadge
 import com.rcflechas.shoppingcartapp.utilities.UIState
 import com.rcflechas.shoppingcartapp.viewmodels.MovieViewModel
 import com.rcflechas.shoppingcartapp.views.adapters.MovieAdapter
+import com.rcflechas.shoppingcartapp.views.binds.CartBind
 import com.rcflechas.shoppingcartapp.views.binds.MovieBind
 import kotlinx.android.synthetic.main.empty_view.*
 import kotlinx.android.synthetic.main.fragment_movie.*
@@ -59,11 +60,15 @@ class MovieFragment : Fragment() {
     }
 
     private fun initUI() {
-        movieAdapter = MovieAdapter {
+
+        movieAdapter = MovieAdapter ( clickClosure = {
 
             val bundle = bundleOf("movie" to it)
             findNavController().navigate(R.id.action_movieFragment_to_movieDetailFragmentDialog, bundle)
-        }
+        }, addClosure = { movie, amount ->
+
+            movieViewModel.insetCartLocal(CartBind(movieId = movie.id, amount = amount))
+        })
 
         movieAdapter.setHasStableIds(true)
         moviesRecyclerView.apply {
@@ -96,7 +101,7 @@ class MovieFragment : Fragment() {
 
     private fun setupHandler() {
 
-        movieViewModel.getMovieListLiveData().observe(this, Observer { event ->
+        movieViewModel.getMovieListLiveData().observe(this, { event ->
 
             event.getContentIfNotHandled()?.let { status ->
 
@@ -126,6 +131,21 @@ class MovieFragment : Fragment() {
                         loadingTextView.text = getString(R.string.message_connection_error)
                         Log.i(TAG, "--- ${status.message}")
                     }
+                }
+            }
+        })
+
+        movieViewModel.addCartLiveData().observe(this, { status ->
+            when (status) {
+                is UIState.Loading -> {
+                    Log.i(TAG, "--- Loading...")
+                }
+                is UIState.Success<*> -> {
+                    val add = status.data as Boolean
+                    Log.i(TAG, "--- Success Add")
+                }
+                is UIState.Error -> {
+                    Log.i(TAG, "--- ${status.message}")
                 }
             }
         })

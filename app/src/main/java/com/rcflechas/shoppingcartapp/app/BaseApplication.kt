@@ -1,6 +1,8 @@
 package com.rcflechas.shoppingcartapp.app
 
 import android.app.Application
+import com.facebook.stetho.Stetho
+import com.rcflechas.shoppingcartapp.BuildConfig
 import com.rcflechas.shoppingcartapp.app.di.applicationModule
 import com.rcflechas.shoppingcartapp.app.di.retrofitModule
 import com.rcflechas.shoppingcartapp.app.di.roomModule
@@ -14,6 +16,11 @@ class BaseApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        if(BuildConfig.DEBUG) {
+            Stetho.initializeWithDefaults(this)
+        }
+
         startKoin {
             androidContext(this@BaseApplication)
             androidLogger(Level.NONE)

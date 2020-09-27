@@ -9,6 +9,7 @@ import com.rcflechas.shoppingcartapp.models.repositories.CartRepository
 import com.rcflechas.shoppingcartapp.models.repositories.MovieRepository
 import com.rcflechas.shoppingcartapp.utilities.Event
 import com.rcflechas.shoppingcartapp.utilities.UIState
+import com.rcflechas.shoppingcartapp.views.binds.CartBind
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
@@ -17,9 +18,11 @@ class MovieViewModel (private val movieRepository: MovieRepository, private val 
 
 
     private val movieListMutableLiveData: MutableLiveData<Event<UIState>> = MutableLiveData()
+    private val addCartMutableLiveData: MutableLiveData<UIState> = MutableLiveData()
 
 
     fun getMovieListLiveData(): LiveData<Event<UIState>> = movieListMutableLiveData
+    fun addCartLiveData(): LiveData<UIState> = addCartMutableLiveData
 
     private val subscriptions = CompositeDisposable()
 
@@ -73,6 +76,30 @@ class MovieViewModel (private val movieRepository: MovieRepository, private val 
                         )
                     }
                 )
+        )
+    }
+
+    fun insetCartLocal(cart: CartBind) {
+        subscriptions.add(
+
+            cartRepository.insertLocal(CartBind.mapperCartBindToCartEntity(cart)).doOnSubscribe {
+                addCartMutableLiveData.postValue(
+                    UIState.Loading
+                )
+            }
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onComplete = {
+                    addCartMutableLiveData.postValue(UIState.Success(true))
+                },
+                onError = {
+                    addCartMutableLiveData.postValue(
+                        UIState.Error(
+                            it.message ?: "Error"
+                        )
+                    )
+                }
+            )
         )
     }
 
