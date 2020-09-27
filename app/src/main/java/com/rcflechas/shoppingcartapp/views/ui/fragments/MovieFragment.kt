@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.get
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rcflechas.shoppingcartapp.R
 import com.rcflechas.shoppingcartapp.core.isConnect
+import com.rcflechas.shoppingcartapp.core.setBadge
 import com.rcflechas.shoppingcartapp.utilities.UIState
 import com.rcflechas.shoppingcartapp.viewmodels.MovieViewModel
 import com.rcflechas.shoppingcartapp.views.adapters.MovieAdapter
@@ -75,6 +77,12 @@ class MovieFragment : Fragment() {
     private fun setupToolbar() {
         toolbar.setTitle(R.string.app_name)
         toolbar.inflateMenu(R.menu.menu)
+
+        toolbar.menu[0].setBadge(
+            context = requireContext(),
+            count = 2,
+            image = R.drawable.ic_cart_32
+        )
 
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {

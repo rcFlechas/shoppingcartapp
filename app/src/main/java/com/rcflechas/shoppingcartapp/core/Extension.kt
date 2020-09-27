@@ -3,13 +3,14 @@ package com.rcflechas.shoppingcartapp.core
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.request.RequestOptions
 import com.rcflechas.shoppingcartapp.R
-import com.rcflechas.shoppingcartapp.models.data.remote.rest.TheMovieDB
+import com.rcflechas.shoppingcartapp.utilities.Utilities
 import com.rcflechas.shoppingcartapp.views.widget.GlideApp
-import kotlinx.android.synthetic.main.item_movie.view.*
 
 internal infix fun View.onClick(function: () -> Unit) {
     setOnClickListener { function() }
@@ -38,4 +39,12 @@ internal fun ImageView.setImageByUrl(url: String, options: RequestOptions = Requ
         .error(R.drawable.ic_launcher_background)
         .apply(options)
         .into(this)
+}
+
+internal fun MenuItem.setBadge(context: Context, image: Int, count: Int) {
+    this.icon = if (count > 0) {
+        Utilities.convertLayoutToView(context, count, image)
+    } else {
+        ContextCompat.getDrawable(context, image)
+    }
 }
