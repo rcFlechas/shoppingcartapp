@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.rcflechas.shoppingcartapp.models.data.local.dao.MovieDAO
 import com.rcflechas.shoppingcartapp.models.data.local.entities.Movie
+import com.rcflechas.shoppingcartapp.models.data.local.entities.MovieWithCart
 import com.rcflechas.shoppingcartapp.models.data.remote.api.MovieApi
 import com.rcflechas.shoppingcartapp.models.data.remote.responses.MovieResponse
 import com.rcflechas.shoppingcartapp.models.data.remote.responses.TheMovieDbResponse
@@ -41,6 +42,8 @@ class MovieRepositoryImpl(private val movieApi: MovieApi, private val movieDAO: 
     override fun deleteByIdLocal(id: Int): Completable = movieDAO.deleteById(id)
 
     override fun deleteAllLocal(): Completable = movieDAO.deleteAll()
+
+    override fun getMovieWithCartLocal(): Flowable<List<MovieWithCart>> = movieDAO.getMovieWithCart()
 
     companion object {
         const val TAG = "MovieRepositoryImpl"

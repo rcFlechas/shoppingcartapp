@@ -1,7 +1,9 @@
 package com.rcflechas.shoppingcartapp.models.data.local.dao
 
 import androidx.room.*
+import com.rcflechas.shoppingcartapp.models.data.local.entities.CartWithMovie
 import com.rcflechas.shoppingcartapp.models.data.local.entities.Movie
+import com.rcflechas.shoppingcartapp.models.data.local.entities.MovieWithCart
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -26,4 +28,8 @@ interface MovieDAO {
 
     @Query("DELETE FROM movie")
     fun deleteAll(): Completable
+
+    @Transaction
+    @Query("SELECT * FROM movie")
+    fun getMovieWithCart(): Flowable<List<MovieWithCart>>
 }

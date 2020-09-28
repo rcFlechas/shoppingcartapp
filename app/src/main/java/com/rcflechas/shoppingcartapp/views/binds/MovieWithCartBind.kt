@@ -1,15 +1,14 @@
 package com.rcflechas.shoppingcartapp.views.binds
 
-import com.rcflechas.shoppingcartapp.models.data.local.entities.Cart
 import java.io.Serializable
 
-data class CartWithMovieBind (
+data class MovieWithCartBind (
     val cart: CartBind,
     val movie: MovieBind
 ) : Serializable {
 
     companion object {
-        fun getMovies (cartWithMovies: List<CartWithMovieBind>) : List<MovieBind> {
+        fun getMovies (cartWithMovies: List<MovieWithCartBind>) : List<MovieBind> {
 
             val list = mutableListOf<MovieBind>()
             cartWithMovies.forEach {

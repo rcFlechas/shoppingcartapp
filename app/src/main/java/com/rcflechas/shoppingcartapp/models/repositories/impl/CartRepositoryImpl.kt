@@ -16,6 +16,8 @@ class CartRepositoryImpl (private val cartDAO: CartDAO) : CartRepository {
 
     override fun updateLocal(cart: Cart): Completable = cartDAO.update(cart)
 
+    override fun deleteLocal(cart: Cart): Completable = cartDAO.delete(cart)
+
     override fun getByIdLocal(id: Int): Single<Cart> = cartDAO.getById(id)
 
     override fun deleteAllLocal(): Completable = cartDAO.deleteAll()

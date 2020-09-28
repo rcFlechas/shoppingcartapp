@@ -6,7 +6,7 @@ import java.io.Serializable
 data class CartBind(
     val id: Int = 0,
     val movieId: Int = 0,
-    val amount: Int = 0
+    var amount: Int = 0
 ): Serializable {
 
     companion object{

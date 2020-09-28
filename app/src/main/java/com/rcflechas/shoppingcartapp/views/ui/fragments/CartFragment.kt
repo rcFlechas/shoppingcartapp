@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -17,13 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.rcflechas.shoppingcartapp.R
-import com.rcflechas.shoppingcartapp.models.data.local.entities.CartWithMovie
 import com.rcflechas.shoppingcartapp.utilities.UIState
 import com.rcflechas.shoppingcartapp.viewmodels.CartViewModel
-import com.rcflechas.shoppingcartapp.viewmodels.MovieViewModel
 import com.rcflechas.shoppingcartapp.views.adapters.MovieAdapter
-import com.rcflechas.shoppingcartapp.views.binds.CartBind
-import com.rcflechas.shoppingcartapp.views.binds.CartWithMovieBind
+import com.rcflechas.shoppingcartapp.views.binds.MovieWithCartBind
 import com.rcflechas.shoppingcartapp.views.binds.MovieBind
 import com.rcflechas.shoppingcartapp.views.widget.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.empty_view.*
@@ -63,7 +59,9 @@ class CartFragment : Fragment() {
         movieAdapter = MovieAdapter(clickClosure = {
             val bundle = bundleOf("movie" to it)
             findNavController().navigate(R.id.action_cartFragment_to_movieDetailFragmentDialog, bundle)
-        }, addClosure = { movie, amount ->
+        }, addClosure = {
+
+        }, removeClosure = {
 
         })
 
@@ -127,12 +125,12 @@ class CartFragment : Fragment() {
                     }
                     is UIState.Success<*> -> {
 
-                        val data = status.data as MutableList<CartWithMovieBind>
+                        val data = status.data as List<MovieWithCartBind>
                         Log.i(TAG, "--- Success...")
                         if (data.count() != 0) {
 
                             includeEmptyView.visibility = View.GONE
-                            movieAdapter.setData(CartWithMovieBind.getMovies(data) as MutableList<MovieBind>)
+                            movieAdapter.setData(data as MutableList<MovieWithCartBind>)
                         } else {
 
                             includeEmptyView.visibility = View.VISIBLE

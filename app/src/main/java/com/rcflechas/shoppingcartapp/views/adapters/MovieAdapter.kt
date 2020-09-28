@@ -8,28 +8,31 @@ import com.bumptech.glide.request.RequestOptions
 import com.rcflechas.shoppingcartapp.R
 import com.rcflechas.shoppingcartapp.core.onClick
 import com.rcflechas.shoppingcartapp.core.setImageByUrl
+import com.rcflechas.shoppingcartapp.models.data.local.entities.CartWithMovie
 import com.rcflechas.shoppingcartapp.models.data.remote.rest.TheMovieDB
 import com.rcflechas.shoppingcartapp.views.binds.MovieBind
+import com.rcflechas.shoppingcartapp.views.binds.MovieWithCartBind
 import com.rcflechas.shoppingcartapp.views.widget.GlideApp
 import kotlinx.android.synthetic.main.item_movie.view.*
 
 class MovieAdapter (
-    val clickClosure: (MovieBind) -> Unit,
-    val addClosure: (MovieBind, Int) -> Unit
-) : CustomAdapter<MovieBind, MovieAdapter.ViewHolder>() {
+    val clickClosure: (MovieWithCartBind) -> Unit,
+    val addClosure: (MovieWithCartBind) -> Unit,
+    val removeClosure: (MovieWithCartBind) -> Unit
+) : CustomAdapter<MovieWithCartBind, MovieAdapter.ViewHolder>() {
 
-    private var dataItems = arrayListOf<MovieBind>()
+    private var dataItems = arrayListOf<MovieWithCartBind>()
 
-    fun setData(movies: MutableList<MovieBind>) {
+    fun setData(movieWithCartBind: MutableList<MovieWithCartBind>) {
 
         dataItems.clear()
-        dataItems.addAll(movies)
+        dataItems.addAll(movieWithCartBind)
         elements.clear()
-        elements.addAll(movies)
+        elements.addAll(movieWithCartBind)
         notifyDataSetChanged()
     }
 
-    fun getData(): MutableList<MovieBind> {
+    fun getData(): MutableList<MovieWithCartBind> {
         return dataItems
     }
 
@@ -48,42 +51,73 @@ class MovieAdapter (
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val movie = dataItems[position]
-        holder.bind(movie)
-        holder.bindClick(movie)
+        val movieWithCartBind = dataItems[position]
+        holder.bind(movieWithCartBind)
+        holder.bindClick(movieWithCartBind)
     }
 
     override fun getItemId(position: Int): Long {
-        return dataItems[position].id.toLong()
+        return dataItems[position].movie.id.toLong()
     }
 
-    fun getItem(position: Int): MovieBind {
+    fun getItem(position: Int): MovieWithCartBind {
         return dataItems[position]
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(movie: MovieBind) {
+        fun bind(movieWithCartBind: MovieWithCartBind) {
 
             itemView.movieImageView.setImageByUrl(
-                url = "${TheMovieDB.URL_IMAGE_W780}${movie.posterPath}",
+                url = "${TheMovieDB.URL_IMAGE_W780}${movieWithCartBind.movie.posterPath}",
                 options = RequestOptions().centerCrop()
             )
-            itemView.titleMovieTextView.text = movie.title
-            itemView.overViewMovieTextView.text = movie.overView
+            itemView.titleMovieTextView.text = movieWithCartBind.movie.title
+            itemView.overViewMovieTextView.text = movieWithCartBind.movie.overView
+            itemView.countTextView.text = movieWithCartBind.cart.amount.toString()
+
+            if (movieWithCartBind.cart.amount > 0) {
+
+                itemView.addLinearLayoutCompat.visibility = View.GONE
+                itemView.addRemoveLinearLayoutCompat.visibility = View.VISIBLE
+            } else {
+
+                itemView.addLinearLayoutCompat.visibility = View.VISIBLE
+                itemView.addRemoveLinearLayoutCompat.visibility = View.GONE
+            }
         }
 
-        fun bindClick(movie: MovieBind) {
+        fun bindClick(movieWithCartBind: MovieWithCartBind) {
 
             itemView.addMaterialButton.onClick {
+
                 itemView.addLinearLayoutCompat.visibility = View.GONE
                 itemView.addRemoveLinearLayoutCompat.visibility = View.VISIBLE
 
-                addClosure(movie, itemView.countTextView.text.toString().toInt())
+                movieWithCartBind.cart.amount++
+                addClosure(movieWithCartBind)
             }
 
             itemView.onClick {
-                clickClosure(movie)
+                clickClosure(movieWithCartBind)
+            }
+
+            itemView.addImageButton.onClick {
+
+                movieWithCartBind.cart.amount++
+                addClosure(movieWithCartBind)
+            }
+
+            itemView.removeImageButton.onClick {
+                if (movieWithCartBind.cart.amount > 0) {
+
+                    movieWithCartBind.cart.amount--
+                    if (movieWithCartBind.cart.amount == 0) {
+                        itemView.addLinearLayoutCompat.visibility = View.VISIBLE
+                        itemView.addRemoveLinearLayoutCompat.visibility = View.GONE
+                    }
+                    removeClosure(movieWithCartBind)
+                }
             }
         }
     }

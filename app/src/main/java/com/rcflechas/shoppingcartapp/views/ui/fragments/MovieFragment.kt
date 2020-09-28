@@ -16,11 +16,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rcflechas.shoppingcartapp.R
 import com.rcflechas.shoppingcartapp.core.isConnect
 import com.rcflechas.shoppingcartapp.core.setBadge
+import com.rcflechas.shoppingcartapp.models.data.local.entities.CartWithMovie
 import com.rcflechas.shoppingcartapp.utilities.UIState
 import com.rcflechas.shoppingcartapp.viewmodels.MovieViewModel
 import com.rcflechas.shoppingcartapp.views.adapters.MovieAdapter
 import com.rcflechas.shoppingcartapp.views.binds.CartBind
 import com.rcflechas.shoppingcartapp.views.binds.MovieBind
+import com.rcflechas.shoppingcartapp.views.binds.MovieWithCartBind
 import kotlinx.android.synthetic.main.empty_view.*
 import kotlinx.android.synthetic.main.fragment_movie.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -54,20 +56,31 @@ class MovieFragment : Fragment() {
         val isConnect = context?.isConnect() ?: false
         if (isConnect) {
             movieViewModel.getAllRemote()
-        } else {
-            movieViewModel.getAllLocal()
         }
+
+        movieViewModel.getAllCartWithMovieLocal()
     }
 
     private fun initUI() {
 
         movieAdapter = MovieAdapter ( clickClosure = {
 
-            val bundle = bundleOf("movie" to it)
+            val bundle = bundleOf("movie" to it.movie)
             findNavController().navigate(R.id.action_movieFragment_to_movieDetailFragmentDialog, bundle)
-        }, addClosure = { movie, amount ->
+        }, addClosure = {
 
-            movieViewModel.insetCartLocal(CartBind(movieId = movie.id, amount = amount))
+            if (it.cart.id == 0) {
+                movieViewModel.insertCartLocal(CartBind(id = it.cart.id, movieId = it.movie.id, amount = it.cart.amount))
+            } else {
+                movieViewModel.updateCartLocal(CartBind(id = it.cart.id, movieId = it.movie.id, amount = it.cart.amount))
+            }
+        }, removeClosure = {
+
+            if (it.cart.amount == 0) {
+                movieViewModel.deleteCartLocal(CartBind(id = it.cart.id, movieId = it.movie.id, amount = it.cart.amount))
+            } else {
+                movieViewModel.updateCartLocal(CartBind(id = it.cart.id, movieId = it.movie.id, amount = it.cart.amount))
+            }
         })
 
         movieAdapter.setHasStableIds(true)
@@ -101,7 +114,7 @@ class MovieFragment : Fragment() {
 
     private fun setupHandler() {
 
-        movieViewModel.getMovieListLiveData().observe(this, { event ->
+        movieViewModel.getCartWithMovieListLiveData().observe(this, { event ->
 
             event.getContentIfNotHandled()?.let { status ->
 
@@ -113,12 +126,13 @@ class MovieFragment : Fragment() {
                     }
                     is UIState.Success<*> -> {
 
-                        val data = status.data as MutableList<MovieBind>
+                        val data = status.data as List<MovieWithCartBind>
                         Log.i(TAG, "--- Success...")
                         if (data.count() != 0) {
 
+
                             includeEmptyView.visibility = View.GONE
-                            movieAdapter.setData(data)
+                            movieAdapter.setData(data as MutableList<MovieWithCartBind>)
                         } else {
 
                             includeEmptyView.visibility = View.VISIBLE
@@ -135,14 +149,47 @@ class MovieFragment : Fragment() {
             }
         })
 
-        movieViewModel.addCartLiveData().observe(this, { status ->
+        movieViewModel.insertCartLiveData().observe(this, { status ->
             when (status) {
                 is UIState.Loading -> {
                     Log.i(TAG, "--- Loading...")
                 }
                 is UIState.Success<*> -> {
                     val add = status.data as Boolean
-                    Log.i(TAG, "--- Success Add")
+                    movieViewModel.getAllCartWithMovieLocal()
+                    Log.i(TAG, "--- Success Insert")
+                }
+                is UIState.Error -> {
+                    Log.i(TAG, "--- ${status.message}")
+                }
+            }
+        })
+
+        movieViewModel.updateCartLiveData().observe(this, { status ->
+            when (status) {
+                is UIState.Loading -> {
+                    Log.i(TAG, "--- Loading...")
+                }
+                is UIState.Success<*> -> {
+                    val add = status.data as Boolean
+                    movieViewModel.getAllCartWithMovieLocal()
+                    Log.i(TAG, "--- Success Update")
+                }
+                is UIState.Error -> {
+                    Log.i(TAG, "--- ${status.message}")
+                }
+            }
+        })
+
+        movieViewModel.deleteCartLiveData().observe(this, { status ->
+            when (status) {
+                is UIState.Loading -> {
+                    Log.i(TAG, "--- Loading...")
+                }
+                is UIState.Success<*> -> {
+                    val add = status.data as Boolean
+                    movieViewModel.getAllCartWithMovieLocal()
+                    Log.i(TAG, "--- Success Delete")
                 }
                 is UIState.Error -> {
                     Log.i(TAG, "--- ${status.message}")

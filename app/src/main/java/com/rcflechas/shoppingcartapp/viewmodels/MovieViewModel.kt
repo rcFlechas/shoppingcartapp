@@ -3,7 +3,9 @@ package com.rcflechas.shoppingcartapp.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.rcflechas.shoppingcartapp.models.data.local.entities.CartWithMovie
 import com.rcflechas.shoppingcartapp.models.data.local.entities.Movie
+import com.rcflechas.shoppingcartapp.models.data.local.entities.MovieWithCart
 import com.rcflechas.shoppingcartapp.models.data.remote.responses.MovieResponse
 import com.rcflechas.shoppingcartapp.models.repositories.CartRepository
 import com.rcflechas.shoppingcartapp.models.repositories.MovieRepository
@@ -17,12 +19,16 @@ import io.reactivex.schedulers.Schedulers
 class MovieViewModel (private val movieRepository: MovieRepository, private val cartRepository: CartRepository) : ViewModel() {
 
 
-    private val movieListMutableLiveData: MutableLiveData<Event<UIState>> = MutableLiveData()
-    private val addCartMutableLiveData: MutableLiveData<UIState> = MutableLiveData()
+    private val cartWithMovieListMutableLiveData: MutableLiveData<Event<UIState>> = MutableLiveData()
+    private val insertCartMutableLiveData: MutableLiveData<UIState> = MutableLiveData()
+    private val updateCartMutableLiveData: MutableLiveData<UIState> = MutableLiveData()
+    private val deleteCartMutableLiveData: MutableLiveData<UIState> = MutableLiveData()
 
 
-    fun getMovieListLiveData(): LiveData<Event<UIState>> = movieListMutableLiveData
-    fun addCartLiveData(): LiveData<UIState> = addCartMutableLiveData
+    fun getCartWithMovieListLiveData(): LiveData<Event<UIState>> = cartWithMovieListMutableLiveData
+    fun insertCartLiveData(): LiveData<UIState> = insertCartMutableLiveData
+    fun updateCartLiveData(): LiveData<UIState> = updateCartMutableLiveData
+    fun deleteCartLiveData(): LiveData<UIState> = deleteCartMutableLiveData
 
     private val subscriptions = CompositeDisposable()
 
@@ -32,41 +38,35 @@ class MovieViewModel (private val movieRepository: MovieRepository, private val 
         subscriptions.add(
             movieRepository.getAllRemote()
                 .doOnSubscribe {
-                    movieListMutableLiveData.postValue(Event(UIState.Loading))
+
                 }
                 .subscribeOn(Schedulers.io())
                 .subscribeBy(
                     onSuccess = {
                         movieRepository.insertAllLocal(MovieResponse.mapperMovieResponseToMovieEntityList(it.results))
-                        movieListMutableLiveData.postValue(Event(UIState.Success(MovieResponse.mapperMovieResponseToMovieBindList(it.results))))
+
                     },
                     onError = {
-                        movieListMutableLiveData.postValue(
-                            Event(
-                                UIState.Error(
-                                    it.message
-                                        ?: "Error"
-                                )
-                            )
-                        )
+
                     }
                 )
         )
     }
 
-    fun getAllLocal() {
+    fun getAllCartWithMovieLocal() {
 
         subscriptions.add(
-            movieRepository.getAllLocal()
+            movieRepository.getMovieWithCartLocal()
                 .doOnSubscribe {
-                    movieListMutableLiveData.postValue(Event(UIState.Loading))
+                    cartWithMovieListMutableLiveData.postValue(Event(UIState.Loading))
                 }.subscribeOn(Schedulers.io())
                 .subscribeBy(
                     onNext = {
-                        movieListMutableLiveData.postValue(Event(UIState.Success(Movie.mapperMovieToMovieBindList(it))))
+                        cartWithMovieListMutableLiveData.postValue(Event(UIState.Success(
+                            MovieWithCart.mapperMovieWithCartToMovieWithCartBindList(it))))
                     },
                     onError = {
-                        movieListMutableLiveData.postValue(
+                        cartWithMovieListMutableLiveData.postValue(
                             Event(
                                 UIState.Error(
                                     it.message
@@ -79,27 +79,75 @@ class MovieViewModel (private val movieRepository: MovieRepository, private val 
         )
     }
 
-    fun insetCartLocal(cart: CartBind) {
+    fun insertCartLocal(cart: CartBind) {
         subscriptions.add(
 
             cartRepository.insertLocal(CartBind.mapperCartBindToCartEntity(cart)).doOnSubscribe {
-                addCartMutableLiveData.postValue(
+                insertCartMutableLiveData.postValue(
                     UIState.Loading
                 )
             }
             .subscribeOn(Schedulers.io())
             .subscribeBy(
                 onComplete = {
-                    addCartMutableLiveData.postValue(UIState.Success(true))
+                    insertCartMutableLiveData.postValue(UIState.Success(true))
                 },
                 onError = {
-                    addCartMutableLiveData.postValue(
+                    insertCartMutableLiveData.postValue(
                         UIState.Error(
                             it.message ?: "Error"
                         )
                     )
                 }
             )
+        )
+    }
+
+    fun updateCartLocal(cart: CartBind) {
+        subscriptions.add(
+
+            cartRepository.insertLocal(CartBind.mapperCartBindToCartEntity(cart)).doOnSubscribe {
+                updateCartMutableLiveData.postValue(
+                    UIState.Loading
+                )
+            }
+                .subscribeOn(Schedulers.io())
+                .subscribeBy(
+                    onComplete = {
+                        updateCartMutableLiveData.postValue(UIState.Success(true))
+                    },
+                    onError = {
+                        updateCartMutableLiveData.postValue(
+                            UIState.Error(
+                                it.message ?: "Error"
+                            )
+                        )
+                    }
+                )
+        )
+    }
+
+    fun deleteCartLocal(cart: CartBind) {
+        subscriptions.add(
+
+            cartRepository.deleteLocal(CartBind.mapperCartBindToCartEntity(cart)).doOnSubscribe {
+                deleteCartMutableLiveData.postValue(
+                    UIState.Loading
+                )
+            }
+                .subscribeOn(Schedulers.io())
+                .subscribeBy(
+                    onComplete = {
+                        deleteCartMutableLiveData.postValue(UIState.Success(true))
+                    },
+                    onError = {
+                        deleteCartMutableLiveData.postValue(
+                            UIState.Error(
+                                it.message ?: "Error"
+                            )
+                        )
+                    }
+                )
         )
     }
 

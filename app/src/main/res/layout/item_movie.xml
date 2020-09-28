@@ -75,8 +75,7 @@
                     android:layout_marginHorizontal="@dimen/dimen_8dp"
                     android:gravity="center"
                     android:textSize="@dimen/dimen_16sp"
-                    android:textColor="@color/colorAccent"
-                    android:text="1" />
+                    android:textColor="@color/colorAccent" />
 
                 <androidx.appcompat.widget.AppCompatImageButton
                     android:id="@+id/addImageButton"

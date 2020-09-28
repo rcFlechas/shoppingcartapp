@@ -14,6 +14,8 @@ interface CartRepository {
 
     fun updateLocal(cart: Cart): Completable
 
+    fun deleteLocal(cart: Cart): Completable
+
     fun getByIdLocal(id: Int): Single<Cart>
 
     fun clearCartMovieLocal(movieId: Int): Completable

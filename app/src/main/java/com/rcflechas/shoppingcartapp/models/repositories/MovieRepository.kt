@@ -1,6 +1,8 @@
 package com.rcflechas.shoppingcartapp.models.repositories
 
+import com.rcflechas.shoppingcartapp.models.data.local.entities.CartWithMovie
 import com.rcflechas.shoppingcartapp.models.data.local.entities.Movie
+import com.rcflechas.shoppingcartapp.models.data.local.entities.MovieWithCart
 import com.rcflechas.shoppingcartapp.models.data.remote.responses.MovieResponse
 import com.rcflechas.shoppingcartapp.models.data.remote.responses.TheMovieDbResponse
 import io.reactivex.Completable
@@ -22,4 +24,6 @@ interface MovieRepository {
     fun deleteByIdLocal(id: Int): Completable
 
     fun deleteAllLocal(): Completable
+
+    fun getMovieWithCartLocal(): Flowable<List<MovieWithCart>>
 }

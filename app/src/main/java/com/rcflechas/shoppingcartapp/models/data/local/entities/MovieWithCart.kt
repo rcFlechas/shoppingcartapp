@@ -2,27 +2,28 @@ package com.rcflechas.shoppingcartapp.models.data.local.entities
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import com.rcflechas.shoppingcartapp.views.binds.CartBind
 import com.rcflechas.shoppingcartapp.views.binds.MovieWithCartBind
 import java.io.Serializable
 
-data class CartWithMovie (
+data class MovieWithCart (
 
-    @Embedded val cart: Cart,
+    @Embedded val movie: Movie,
     @Relation(
         parentColumn = "movi_id",
         entityColumn = "movi_id"
     )
-    val movie: Movie
-) :  Serializable {
+    val cart: Cart?
+) : Serializable {
 
     companion object {
-        fun mapperCartWithMovieToCartWithMovieBindList(cartWithMovie: List<CartWithMovie>): List<MovieWithCartBind> {
+        fun mapperMovieWithCartToMovieWithCartBindList(movieWithCart: List<MovieWithCart>): List<MovieWithCartBind> {
 
             val list = mutableListOf<MovieWithCartBind>()
-            cartWithMovie.forEach {
+            movieWithCart.forEach {
                 list.add(
                     MovieWithCartBind(
-                        cart = Cart.mapperCartToCartBind(it.cart),
+                        cart = Cart.mapperCartToCartBind(it.cart ?: Cart()),
                         movie = Movie.mapperMovieEntityToMovieBind(it.movie)
                     )
                 )

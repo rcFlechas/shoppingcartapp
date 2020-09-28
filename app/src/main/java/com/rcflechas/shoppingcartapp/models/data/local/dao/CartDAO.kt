@@ -14,11 +14,14 @@ interface CartDAO {
     @Query("SELECT * FROM cart")
     fun getCartWithMovie(): Flowable<List<CartWithMovie>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(cart: Cart): Completable
 
     @Update
     fun update(cart: Cart): Completable
+
+    @Delete
+    fun delete(cart: Cart): Completable
 
     @Query("SELECT * FROM cart WHERE cart_id = :id")
     fun getById(id: Int): Single<Cart>
