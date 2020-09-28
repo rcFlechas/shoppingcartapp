@@ -96,11 +96,7 @@ class MovieFragment : Fragment() {
         toolbar.setTitle(R.string.app_name)
         toolbar.inflateMenu(R.menu.menu)
 
-        toolbar.menu[0].setBadge(
-            context = requireContext(),
-            count = 2,
-            image = R.drawable.ic_cart_32
-        )
+        setBadge()
 
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -111,6 +107,17 @@ class MovieFragment : Fragment() {
             true
         }
     }
+
+    private fun setBadge(count: Int = 0) {
+
+        toolbar.menu[0].setBadge(
+            context = requireContext(),
+            count = count,
+            image = R.drawable.ic_cart_32
+        )
+    }
+
+    private fun countMoviesCart(movieWithCartBind: List<MovieWithCartBind>) = movieWithCartBind.sumBy { it.cart.amount }
 
     private fun setupHandler() {
 
@@ -127,7 +134,8 @@ class MovieFragment : Fragment() {
                     is UIState.Success<*> -> {
 
                         val data = status.data as List<MovieWithCartBind>
-                        Log.i(TAG, "--- Success...")
+                        setBadge(countMoviesCart(data))
+
                         if (data.count() != 0) {
 
 
@@ -138,6 +146,7 @@ class MovieFragment : Fragment() {
                             includeEmptyView.visibility = View.VISIBLE
                             loadingTextView.text = getString(R.string.message_list_empty)
                         }
+                        Log.i(TAG, "--- Success...")
                     }
                     is UIState.Error -> {
 
