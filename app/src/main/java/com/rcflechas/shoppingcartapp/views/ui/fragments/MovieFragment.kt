@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.get
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,15 +15,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rcflechas.shoppingcartapp.R
 import com.rcflechas.shoppingcartapp.core.isConnect
 import com.rcflechas.shoppingcartapp.core.setBadge
-import com.rcflechas.shoppingcartapp.models.data.local.entities.CartWithMovie
 import com.rcflechas.shoppingcartapp.utilities.UIState
 import com.rcflechas.shoppingcartapp.viewmodels.MovieViewModel
 import com.rcflechas.shoppingcartapp.views.adapters.MovieAdapter
 import com.rcflechas.shoppingcartapp.views.binds.CartBind
-import com.rcflechas.shoppingcartapp.views.binds.MovieBind
 import com.rcflechas.shoppingcartapp.views.binds.MovieWithCartBind
 import kotlinx.android.synthetic.main.empty_view.*
 import kotlinx.android.synthetic.main.fragment_movie.*
+import kotlinx.android.synthetic.main.fragment_movie.includeEmptyView
+import kotlinx.android.synthetic.main.fragment_movie.moviesRecyclerView
+import kotlinx.android.synthetic.main.fragment_movie.toolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MovieFragment : Fragment() {
@@ -119,6 +119,17 @@ class MovieFragment : Fragment() {
 
     private fun countMoviesCart(movieWithCartBind: List<MovieWithCartBind>) = movieWithCartBind.sumBy { it.cart.amount }
 
+    private fun dataEmpty(text: String = String()) {
+        nestedScrollView.visibility = View.GONE
+        includeEmptyView.visibility = View.VISIBLE
+        loadingTextView.text = text
+    }
+
+    private fun dataNoEmpty() {
+        nestedScrollView.visibility = View.VISIBLE
+        includeEmptyView.visibility = View.GONE
+    }
+
     private fun setupHandler() {
 
         movieViewModel.getCartWithMovieListLiveData().observe(this, { event ->
@@ -135,16 +146,14 @@ class MovieFragment : Fragment() {
 
                         val data = status.data as List<MovieWithCartBind>
                         setBadge(countMoviesCart(data))
-
+                        movieAdapter.clearData()
                         if (data.count() != 0) {
 
-
-                            includeEmptyView.visibility = View.GONE
+                            dataNoEmpty()
                             movieAdapter.setData(data as MutableList<MovieWithCartBind>)
                         } else {
 
-                            includeEmptyView.visibility = View.VISIBLE
-                            loadingTextView.text = getString(R.string.message_list_empty)
+                            dataEmpty(getString(R.string.message_list_empty))
                         }
                         Log.i(TAG, "--- Success...")
                     }

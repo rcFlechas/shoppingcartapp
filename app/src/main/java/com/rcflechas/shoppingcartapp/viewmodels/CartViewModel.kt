@@ -20,12 +20,14 @@ class CartViewModel (private val cartRepository: CartRepository) : ViewModel() {
     private val insertCartMutableLiveData: MutableLiveData<UIState> = MutableLiveData()
     private val updateCartMutableLiveData: MutableLiveData<UIState> = MutableLiveData()
     private val deleteCartMutableLiveData: MutableLiveData<UIState> = MutableLiveData()
+    private val deleteCartAllMutableLiveData: MutableLiveData<UIState> = MutableLiveData()
 
 
     fun getCartWithMovieListLiveData(): LiveData<Event<UIState>> = cartWithMovieListMutableLiveData
     fun insertCartLiveData(): LiveData<UIState> = insertCartMutableLiveData
     fun updateCartLiveData(): LiveData<UIState> = updateCartMutableLiveData
     fun deleteCartLiveData(): LiveData<UIState> = deleteCartMutableLiveData
+    fun deleteCartAllLiveData(): LiveData<UIState> = deleteCartAllMutableLiveData
 
     private val subscriptions = CompositeDisposable()
 
@@ -61,19 +63,19 @@ class CartViewModel (private val cartRepository: CartRepository) : ViewModel() {
                     UIState.Loading
                 )
             }
-                .subscribeOn(Schedulers.io())
-                .subscribeBy(
-                    onComplete = {
-                        insertCartMutableLiveData.postValue(UIState.Success(true))
-                    },
-                    onError = {
-                        insertCartMutableLiveData.postValue(
-                            UIState.Error(
-                                it.message ?: "Error"
-                            )
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onComplete = {
+                    insertCartMutableLiveData.postValue(UIState.Success(true))
+                },
+                onError = {
+                    insertCartMutableLiveData.postValue(
+                        UIState.Error(
+                            it.message ?: "Error"
                         )
-                    }
-                )
+                    )
+                }
+            )
         )
     }
 
@@ -85,19 +87,19 @@ class CartViewModel (private val cartRepository: CartRepository) : ViewModel() {
                     UIState.Loading
                 )
             }
-                .subscribeOn(Schedulers.io())
-                .subscribeBy(
-                    onComplete = {
-                        updateCartMutableLiveData.postValue(UIState.Success(true))
-                    },
-                    onError = {
-                        updateCartMutableLiveData.postValue(
-                            UIState.Error(
-                                it.message ?: "Error"
-                            )
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onComplete = {
+                    updateCartMutableLiveData.postValue(UIState.Success(true))
+                },
+                onError = {
+                    updateCartMutableLiveData.postValue(
+                        UIState.Error(
+                            it.message ?: "Error"
                         )
-                    }
-                )
+                    )
+                }
+            )
         )
     }
 
@@ -109,19 +111,41 @@ class CartViewModel (private val cartRepository: CartRepository) : ViewModel() {
                     UIState.Loading
                 )
             }
-                .subscribeOn(Schedulers.io())
-                .subscribeBy(
-                    onComplete = {
-                        deleteCartMutableLiveData.postValue(UIState.Success(true))
-                    },
-                    onError = {
-                        deleteCartMutableLiveData.postValue(
-                            UIState.Error(
-                                it.message ?: "Error"
-                            )
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onComplete = {
+                    deleteCartMutableLiveData.postValue(UIState.Success(true))
+                },
+                onError = {
+                    deleteCartMutableLiveData.postValue(
+                        UIState.Error(
+                            it.message ?: "Error"
                         )
-                    }
-                )
+                    )
+                }
+            )
+        )
+    }
+
+    fun deleteCartAllLocal() {
+        subscriptions.add(
+
+            cartRepository.deleteAllLocal().doOnSubscribe {
+                deleteCartAllMutableLiveData.postValue(UIState.Loading)
+            }
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onComplete = {
+                    deleteCartAllMutableLiveData.postValue(UIState.Success(true))
+                },
+                onError = {
+                    deleteCartAllMutableLiveData.postValue(
+                        UIState.Error(
+                            it.message ?: "Error"
+                        )
+                    )
+                }
+            )
         )
     }
 }

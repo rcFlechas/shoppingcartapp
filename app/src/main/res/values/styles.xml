@@ -52,7 +52,6 @@
     <style name="CardMovie">
         <item name="cardPreventCornerOverlap">true</item>
         <item name="cardUseCompatPadding">true</item>
-        <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="cardElevation">0.5dp</item>
         <item name="cardBackgroundColor">@android:color/white</item>
@@ -60,6 +59,13 @@
         <item name="cardCornerRadius">@dimen/dimen_2dp</item>
         <item name="android:layout_marginVertical">@dimen/dimen_4dp</item>
         <item name="android:layout_marginHorizontal">@dimen/dimen_8dp</item>
+    </style>
+
+    <style name="ItemMovie">
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:background">@android:color/white</item>
     </style>
 
     <style name="ripple_bordered">

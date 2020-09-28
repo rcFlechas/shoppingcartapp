@@ -16,13 +16,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.rcflechas.shoppingcartapp.R
+import com.rcflechas.shoppingcartapp.core.onClick
 import com.rcflechas.shoppingcartapp.utilities.UIState
 import com.rcflechas.shoppingcartapp.viewmodels.CartViewModel
 import com.rcflechas.shoppingcartapp.views.adapters.MovieAdapter
 import com.rcflechas.shoppingcartapp.views.binds.CartBind
 import com.rcflechas.shoppingcartapp.views.binds.MovieWithCartBind
-import com.rcflechas.shoppingcartapp.views.binds.MovieBind
 import com.rcflechas.shoppingcartapp.views.widget.SwipeToDeleteCallback
+import kotlinx.android.synthetic.main.cards_layout_clear.*
 import kotlinx.android.synthetic.main.empty_view.*
 import kotlinx.android.synthetic.main.fragment_cart.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -56,6 +57,27 @@ class CartFragment : Fragment() {
 
     private fun initUI() {
 
+        setupRecyclerView()
+        setupSwipe()
+
+        clearMaterialButton.onClick {
+            cartViewModel.deleteCartAllLocal()
+        }
+    }
+
+    private fun setupToolbar() {
+
+        toolbar.navigationIcon = view?.context?.let { ContextCompat.getDrawable(it, R.drawable.ic_back_24) }
+        toolbar.setTitle(R.string.title_cart)
+        toolbar.setTitleTextColor(Color.WHITE)
+        toolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
+        }
+
+    }
+
+    private fun setupRecyclerView() {
+
         movieAdapter = MovieAdapter(clickClosure = {
 
             val bundle = bundleOf("movieWithCartBind" to it)
@@ -83,6 +105,9 @@ class CartFragment : Fragment() {
             setHasFixedSize(true)
             adapter = movieAdapter
         }
+    }
+
+    private fun setupSwipe() {
 
         val swipeHandler = object : SwipeToDeleteCallback(requireActivity()) {
 
@@ -103,8 +128,11 @@ class CartFragment : Fragment() {
                     data.add(deletedItem)
                     movieAdapter.animateTo(data)
                     if (position == 0) {
-                        val layoutManager = moviesRecyclerView.layoutManager as LinearLayoutManager?
-                        layoutManager?.scrollToPosition(0)
+
+                        moviesRecyclerView?.let {
+                            val layoutManager = it.layoutManager as LinearLayoutManager
+                            layoutManager.scrollToPosition(0)
+                        }
                     }
                 }
                 snackbar.setActionTextColor(Color.YELLOW)
@@ -115,15 +143,15 @@ class CartFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(moviesRecyclerView)
     }
 
-    private fun setupToolbar() {
+    private fun dataEmpty(text: String = String()) {
+        nestedScrollView.visibility = View.GONE
+        includeEmptyView.visibility = View.VISIBLE
+        loadingTextView.text = text
+    }
 
-        toolbar.navigationIcon = view?.context?.let { ContextCompat.getDrawable(it, R.drawable.ic_back_24) }
-        toolbar.setTitle(R.string.title_cart)
-        toolbar.setTitleTextColor(Color.WHITE)
-        toolbar.setNavigationOnClickListener {
-            requireActivity().onBackPressed()
-        }
-
+    private fun dataNoEmpty() {
+        nestedScrollView.visibility = View.VISIBLE
+        includeEmptyView.visibility = View.GONE
     }
 
     private fun setupHandler() {
@@ -144,12 +172,11 @@ class CartFragment : Fragment() {
                         movieAdapter.clearData()
                         if (data.count() != 0) {
 
-                            includeEmptyView.visibility = View.GONE
+                            dataNoEmpty()
                             movieAdapter.setData(data as MutableList<MovieWithCartBind>)
                         } else {
 
-                            includeEmptyView.visibility = View.VISIBLE
-                            loadingTextView.text = getString(R.string.message_list_empty)
+                            dataEmpty(getString(R.string.message_list_empty))
                         }
                         Log.i(TAG, "--- Success...")
                     }
@@ -204,6 +231,26 @@ class CartFragment : Fragment() {
                     val add = status.data as Boolean
                     cartViewModel.getCartWithMovieLocal()
                     Log.i(MovieFragment.TAG, "--- Success Delete")
+                }
+                is UIState.Error -> {
+                    Log.i(MovieFragment.TAG, "--- ${status.message}")
+                }
+            }
+        })
+
+        cartViewModel.deleteCartAllLiveData().observe(this, { status ->
+            when (status) {
+                is UIState.Loading -> {
+                    Log.i(MovieFragment.TAG, "--- Loading...")
+                }
+                is UIState.Success<*> -> {
+
+                    val isDeleted = status.data as Boolean
+                    if (isDeleted) {
+                        movieAdapter.clearData()
+                        cartViewModel.getCartWithMovieLocal()
+                        Log.i(MovieFragment.TAG, "--- Success Delete All")
+                    }
                 }
                 is UIState.Error -> {
                     Log.i(MovieFragment.TAG, "--- ${status.message}")

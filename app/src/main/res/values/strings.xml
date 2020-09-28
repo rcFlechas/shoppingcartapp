@@ -11,5 +11,6 @@
     <string name="title_deleting">Deleting</string>
     <string name="title_update">Update</string>
     <string name="title_add">Add</string>
+    <string name="title_clear_all">Clear ALL</string>
 
 </resources>
