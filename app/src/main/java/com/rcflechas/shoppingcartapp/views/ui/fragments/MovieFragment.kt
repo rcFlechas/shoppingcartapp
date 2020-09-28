@@ -65,7 +65,7 @@ class MovieFragment : Fragment() {
 
         movieAdapter = MovieAdapter ( clickClosure = {
 
-            val bundle = bundleOf("movie" to it.movie)
+            val bundle = bundleOf("movieWithCartBind" to it)
             findNavController().navigate(R.id.action_movieFragment_to_movieDetailFragmentDialog, bundle)
         }, addClosure = {
 

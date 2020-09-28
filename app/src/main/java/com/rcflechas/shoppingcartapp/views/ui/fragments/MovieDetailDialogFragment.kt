@@ -9,16 +9,22 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.request.RequestOptions
 import com.rcflechas.shoppingcartapp.R
+import com.rcflechas.shoppingcartapp.core.onClick
 import com.rcflechas.shoppingcartapp.core.setImageByUrl
 import com.rcflechas.shoppingcartapp.models.data.remote.rest.TheMovieDB
-import com.rcflechas.shoppingcartapp.views.binds.MovieBind
+import com.rcflechas.shoppingcartapp.viewmodels.MovieDetailViewModel
+import com.rcflechas.shoppingcartapp.views.binds.CartBind
+import com.rcflechas.shoppingcartapp.views.binds.MovieWithCartBind
+import kotlinx.android.synthetic.main.cards_layout_amount.*
 import kotlinx.android.synthetic.main.cards_layout_description.*
 import kotlinx.android.synthetic.main.fragment_movie_detail_dialog.*
 import kotlinx.android.synthetic.main.fragment_movie_detail_dialog.titleTextView
 import kotlinx.android.synthetic.main.fragment_movie_detail_dialog.toolbar
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MovieDetailDialogFragment : DialogFragment() {
 
+    private val movieDetailViewModel: MovieDetailViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +40,8 @@ class MovieDetailDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupToolbar(view)
-        arguments?.getSerializable("movie")?.let {
-            initUI(it as MovieBind)
+        arguments?.getSerializable("movieWithCartBind")?.let {
+            initUI(it as MovieWithCartBind)
         }
     }
 
@@ -47,16 +53,73 @@ class MovieDetailDialogFragment : DialogFragment() {
         }
     }
 
-    private fun initUI(movie: MovieBind) {
-        movie.apply {
+    private fun initUI(movieWithCartBind: MovieWithCartBind) {
+        movieWithCartBind.run {
 
             movieImageView.setImageByUrl(
                 url = "${TheMovieDB.URL_IMAGE_W780}${movie.backdropPath}",
                 options = RequestOptions().centerCrop()
             )
 
-            titleTextView.text = title
-            descriptionTextView.text = overView
+            titleTextView.text = movie.title
+            descriptionTextView.text = movie.overView
+
+            if (cart.amount > 0) {
+
+                countTextView.text = cart.amount.toString()
+                actionMaterialButton.text = getString(R.string.title_update)
+                actionMaterialButton.isEnabled = false
+            } else {
+
+                cart.amount++
+                countTextView.text = cart.amount.toString()
+                actionMaterialButton.text = getString(R.string.title_add)
+                actionMaterialButton.isEnabled = true
+            }
+
+            addImageButton.onClick {
+
+                cart.amount++
+                countTextView.text = cart.amount.toString()
+                actionMaterialButton.isEnabled = true
+            }
+
+            removeImageButton.onClick {
+
+                when {
+                    (cart.id == 0 && cart.amount > 1) -> {
+
+                        movieWithCartBind.cart.amount--
+                        countTextView.text = movieWithCartBind.cart.amount.toString()
+                        actionMaterialButton.isEnabled = true
+                    }
+                    (cart.id > 0 && cart.amount > 0) -> {
+
+                        movieWithCartBind.cart.amount--
+                        countTextView.text = movieWithCartBind.cart.amount.toString()
+                        actionMaterialButton.isEnabled = true
+                    }
+                }
+            }
+
+            actionMaterialButton.onClick {
+
+                when {
+
+                    (cart.id == 0 && cart.amount > 0) -> {
+                        movieDetailViewModel.insertCartLocal(CartBind(id = cart.id, movieId = movie.id, amount = cart.amount))
+                    }
+
+                    (cart.id > 0 && cart.amount > 0) -> {
+                        movieDetailViewModel.updateCartLocal(CartBind(id = cart.id, movieId = movie.id, amount = cart.amount))
+                    }
+
+                    (cart.id > 0 && cart.amount == 0) -> {
+                        movieDetailViewModel.deleteCartLocal(CartBind(id = cart.id, movieId = movie.id, amount = cart.amount))
+                    }
+                }
+                dismiss()
+            }
         }
     }
 

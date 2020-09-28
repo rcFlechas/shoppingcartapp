@@ -36,12 +36,12 @@
                 android:src="@drawable/ic_remove_40" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/countQuickCaseTextView"
+                android:id="@+id/countTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/dimen_8dp"
                 android:gravity="center"
-                android:text="1"
+                tools:text="1"
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/dimen_16sp" />
 
@@ -68,10 +68,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/addMaterialButton"
+                android:id="@+id/actionMaterialButton"
                 android:layout_width="@dimen/dimen_104dp"
                 android:layout_height="@dimen/dimen_40dp"
-                android:text="Add"
+                tools:text="Add"
                 app:cornerRadius="@dimen/dimen_16dp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>

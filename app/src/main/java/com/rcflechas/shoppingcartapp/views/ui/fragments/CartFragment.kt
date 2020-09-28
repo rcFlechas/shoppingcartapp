@@ -19,6 +19,7 @@ import com.rcflechas.shoppingcartapp.R
 import com.rcflechas.shoppingcartapp.utilities.UIState
 import com.rcflechas.shoppingcartapp.viewmodels.CartViewModel
 import com.rcflechas.shoppingcartapp.views.adapters.MovieAdapter
+import com.rcflechas.shoppingcartapp.views.binds.CartBind
 import com.rcflechas.shoppingcartapp.views.binds.MovieWithCartBind
 import com.rcflechas.shoppingcartapp.views.binds.MovieBind
 import com.rcflechas.shoppingcartapp.views.widget.SwipeToDeleteCallback
@@ -46,7 +47,6 @@ class CartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initUI()
         setupToolbar()
-        cartViewModel.getCartWithMovieLocal()
     }
 
     override fun onResume() {
@@ -57,12 +57,23 @@ class CartFragment : Fragment() {
     private fun initUI() {
 
         movieAdapter = MovieAdapter(clickClosure = {
-            val bundle = bundleOf("movie" to it)
+
+            val bundle = bundleOf("movieWithCartBind" to it)
             findNavController().navigate(R.id.action_cartFragment_to_movieDetailFragmentDialog, bundle)
         }, addClosure = {
 
+            if (it.cart.id == 0) {
+                cartViewModel.insertCartLocal(CartBind(id = it.cart.id, movieId = it.movie.id, amount = it.cart.amount))
+            } else {
+                cartViewModel.updateCartLocal(CartBind(id = it.cart.id, movieId = it.movie.id, amount = it.cart.amount))
+            }
         }, removeClosure = {
 
+            if (it.cart.amount == 0) {
+                cartViewModel.deleteCartLocal(CartBind(id = it.cart.id, movieId = it.movie.id, amount = it.cart.amount))
+            } else {
+                cartViewModel.updateCartLocal(CartBind(id = it.cart.id, movieId = it.movie.id, amount = it.cart.amount))
+            }
         })
 
         movieAdapter.setHasStableIds(true)
@@ -82,11 +93,15 @@ class CartFragment : Fragment() {
                 val data = movieAdapter.getData()
                 data.removeAt(position)
                 movieAdapter.animateTo(data)
+                cartViewModel.deleteCartLocal(CartBind(id = deletedItem.cart.id, movieId = deletedItem.movie.id, amount = deletedItem.cart.amount))
 
                 // showing snack bar with Undo option
-                val snackbar = Snackbar
-                    .make(requireView(), "Item removed from list!", Snackbar.LENGTH_LONG)
+                val snackbar = Snackbar.make(requireView(), "Item removed from list!", Snackbar.LENGTH_LONG)
                 snackbar.setAction("UNDO") {
+
+                    cartViewModel.insertCartLocal(CartBind(id = deletedItem.cart.id, movieId = deletedItem.movie.id, amount = deletedItem.cart.amount))
+                    data.add(deletedItem)
+                    movieAdapter.animateTo(data)
                     if (position == 0) {
                         val layoutManager = moviesRecyclerView.layoutManager as LinearLayoutManager?
                         layoutManager?.scrollToPosition(0)
@@ -126,7 +141,7 @@ class CartFragment : Fragment() {
                     is UIState.Success<*> -> {
 
                         val data = status.data as List<MovieWithCartBind>
-                        Log.i(TAG, "--- Success...")
+                        movieAdapter.clearData()
                         if (data.count() != 0) {
 
                             includeEmptyView.visibility = View.GONE
@@ -136,6 +151,7 @@ class CartFragment : Fragment() {
                             includeEmptyView.visibility = View.VISIBLE
                             loadingTextView.text = getString(R.string.message_list_empty)
                         }
+                        Log.i(TAG, "--- Success...")
                     }
                     is UIState.Error -> {
 
@@ -143,6 +159,54 @@ class CartFragment : Fragment() {
                         loadingTextView.text = getString(R.string.message_connection_error)
                         Log.i(TAG, "--- ${status.message}")
                     }
+                }
+            }
+        })
+
+        cartViewModel.insertCartLiveData().observe(this, { status ->
+            when (status) {
+                is UIState.Loading -> {
+                    Log.i(MovieFragment.TAG, "--- Loading...")
+                }
+                is UIState.Success<*> -> {
+                    val add = status.data as Boolean
+                    cartViewModel.getCartWithMovieLocal()
+                    Log.i(MovieFragment.TAG, "--- Success Insert")
+                }
+                is UIState.Error -> {
+                    Log.i(MovieFragment.TAG, "--- ${status.message}")
+                }
+            }
+        })
+
+        cartViewModel.updateCartLiveData().observe(this, { status ->
+            when (status) {
+                is UIState.Loading -> {
+                    Log.i(MovieFragment.TAG, "--- Loading...")
+                }
+                is UIState.Success<*> -> {
+                    val add = status.data as Boolean
+                    cartViewModel.getCartWithMovieLocal()
+                    Log.i(MovieFragment.TAG, "--- Success Update")
+                }
+                is UIState.Error -> {
+                    Log.i(MovieFragment.TAG, "--- ${status.message}")
+                }
+            }
+        })
+
+        cartViewModel.deleteCartLiveData().observe(this, { status ->
+            when (status) {
+                is UIState.Loading -> {
+                    Log.i(MovieFragment.TAG, "--- Loading...")
+                }
+                is UIState.Success<*> -> {
+                    val add = status.data as Boolean
+                    cartViewModel.getCartWithMovieLocal()
+                    Log.i(MovieFragment.TAG, "--- Success Delete")
+                }
+                is UIState.Error -> {
+                    Log.i(MovieFragment.TAG, "--- ${status.message}")
                 }
             }
         })
