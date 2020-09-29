@@ -2,8 +2,8 @@
 
 This application simulates a shopping cart, displaying a list of movies as follows:
 
-![](./screenshots/list.jpg =20x100)
-![](./screenshots/list_add.jpg =20x100)
+![](./screenshots/list.jpg =20x100)![](./screenshots/list_add.jpg =20x100)
+
 ![](./screenshots/cart.jpg =20x100)
 ![](./screenshots/cart_swiped.jpg =20x100)
 ![](./screenshots/detail.jpg =20x100)
