@@ -2,12 +2,12 @@
 
 This application simulates a shopping cart, displaying a list of movies as follows:
 
-![](./screenshots/list.jpg =20x100)![](./screenshots/list_add.jpg =20x100)
-
-![](./screenshots/cart.jpg =20x100)
-![](./screenshots/cart_swiped.jpg =20x100)
-![](./screenshots/detail.jpg =20x100)
-![](./screenshots/detail_modify.jpg =20x100)
+![](./screenshots/list.jpg )
+![](./screenshots/list_add.jpg)
+![](./screenshots/cart.jpg)
+![](./screenshots/cart_swiped.jpg)
+![](./screenshots/detail.jpg)
+![](./screenshots/detail_modify.jpg)
 
 ### Technical requirements to build the project. ###
 ------------------------------------
