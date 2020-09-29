@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/postsFragment"
+    tools:ignore="UnusedNavigation">
+
+    <fragment
+        android:id="@+id/postsFragment"
+        android:name="com.rcflechas.shoppingcartapp.views.ui.fragments.MovieFragment"
+        android:label="fragment_movie"
+        tools:layout="@layout/fragment_movie" >
+
+        <action
+            android:id="@+id/action_movieFragment_to_cartFragment"
+            app:destination="@id/cartFragment" />
+
+        <action
+            android:id="@+id/action_movieFragment_to_movieDetailFragmentDialog"
+            app:destination="@id/movieDetailFragmentDialog" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.rcflechas.shoppingcartapp.views.ui.fragments.CartFragment"
+        android:label="fragment_cart"
+        tools:layout="@layout/fragment_cart" >
+
+        <action
+            android:id="@+id/action_cartFragment_to_movieDetailFragmentDialog"
+            app:destination="@id/movieDetailFragmentDialog" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/movieDetailFragmentDialog"
+        android:name="com.rcflechas.shoppingcartapp.views.ui.fragments.MovieDetailDialogFragment"
+        android:label="fragment_movie_detail_dialog"
+        tools:layout="@layout/fragment_movie_detail_dialog"/>
+</navigation>

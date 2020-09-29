@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">ShoppingCartApp</string>
+
+    <string name="message_connection_error">Verify your internet connection please</string>
+    <string name="message_loading">Loading</string>
+    <string name="message_list_empty">List Empty</string>
+
+
+    <string name="title_cart">Cart</string>
+    <string name="title_description">Description</string>
+    <string name="title_deleting">Deleting</string>
+    <string name="title_update">Update</string>
+    <string name="title_add">Add</string>
+    <string name="title_clear_all">Clear ALL</string>
+
+</resources>
