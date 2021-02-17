@@ -1,8 +1,8 @@
 package com.rcflechas.shoppingcartapp.models.data.local.dao
 
 import androidx.room.*
-import com.rcflechas.shoppingcartapp.models.data.local.entities.Cart
-import com.rcflechas.shoppingcartapp.models.data.local.entities.CartWithMovie
+import com.rcflechas.shoppingcartapp.models.data.local.entities.CartEntity
+import com.rcflechas.shoppingcartapp.models.data.local.entities.CartWithMovieEntity
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -11,24 +11,24 @@ import io.reactivex.Single
 interface CartDAO {
 
     @Transaction
-    @Query("SELECT * FROM cart")
-    fun getCartWithMovie(): Flowable<List<CartWithMovie>>
+    @Query("SELECT * FROM cartEntity")
+    fun getCartWithMovie(): Flowable<List<CartWithMovieEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(cart: Cart): Completable
+    fun insert(cartEntity: CartEntity): Completable
 
     @Update
-    fun update(cart: Cart): Completable
+    fun update(cartEntity: CartEntity): Completable
 
     @Delete
-    fun delete(cart: Cart): Completable
+    fun delete(cartEntity: CartEntity): Completable
 
-    @Query("SELECT * FROM cart WHERE cart_id = :id")
-    fun getById(id: Int): Single<Cart>
+    @Query("SELECT * FROM cartEntity WHERE cart_id = :id")
+    fun getById(id: Int): Single<CartEntity>
 
-    @Query("DELETE FROM cart WHERE movi_id = :movieId")
+    @Query("DELETE FROM cartEntity WHERE movi_id = :movieId")
     fun clearCartMovie(movieId: Int): Completable
 
-    @Query("DELETE FROM cart")
+    @Query("DELETE FROM cartEntity")
     fun deleteAll(): Completable
 }

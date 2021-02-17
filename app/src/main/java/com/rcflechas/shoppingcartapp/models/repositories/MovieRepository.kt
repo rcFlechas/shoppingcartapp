@@ -1,8 +1,7 @@
 package com.rcflechas.shoppingcartapp.models.repositories
 
-import com.rcflechas.shoppingcartapp.models.data.local.entities.CartWithMovie
-import com.rcflechas.shoppingcartapp.models.data.local.entities.Movie
-import com.rcflechas.shoppingcartapp.models.data.local.entities.MovieWithCart
+import com.rcflechas.shoppingcartapp.models.data.local.entities.MovieEntity
+import com.rcflechas.shoppingcartapp.models.data.local.entities.MovieWithCartEntity
 import com.rcflechas.shoppingcartapp.models.data.remote.responses.MovieResponse
 import com.rcflechas.shoppingcartapp.models.data.remote.responses.TheMovieDbResponse
 import io.reactivex.Completable
@@ -13,17 +12,17 @@ interface MovieRepository {
 
     fun getAllRemote(): Single<TheMovieDbResponse<MovieResponse>>
 
-    fun getAllLocal(): Flowable<List<Movie>>
+    fun getAllLocal(): Flowable<List<MovieEntity>>
 
-    fun insertAllLocal(movies: List<Movie>)
+    fun insertAllLocal(movies: List<MovieEntity>)
 
-    fun insertLocal(movie: Movie): Completable
+    fun insertLocal(movieEntity: MovieEntity): Completable
 
-    fun getByIdLocal(id: Int): Single<Movie>
+    fun getByIdLocal(id: Int): Single<MovieEntity>
 
     fun deleteByIdLocal(id: Int): Completable
 
     fun deleteAllLocal(): Completable
 
-    fun getMovieWithCartLocal(): Flowable<List<MovieWithCart>>
+    fun getMovieWithCartLocal(): Flowable<List<MovieWithCartEntity>>
 }

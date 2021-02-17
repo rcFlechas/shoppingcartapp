@@ -8,11 +8,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.rcflechas.shoppingcartapp.R
 import com.rcflechas.shoppingcartapp.core.onClick
 import com.rcflechas.shoppingcartapp.core.setImageByUrl
-import com.rcflechas.shoppingcartapp.models.data.local.entities.CartWithMovie
 import com.rcflechas.shoppingcartapp.models.data.remote.rest.TheMovieDB
-import com.rcflechas.shoppingcartapp.views.binds.MovieBind
 import com.rcflechas.shoppingcartapp.views.binds.MovieWithCartBind
-import com.rcflechas.shoppingcartapp.views.widget.GlideApp
 import kotlinx.android.synthetic.main.item_movie.view.*
 
 class MovieAdapter (

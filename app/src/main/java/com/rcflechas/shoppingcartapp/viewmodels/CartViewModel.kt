@@ -3,10 +3,8 @@ package com.rcflechas.shoppingcartapp.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.rcflechas.shoppingcartapp.models.data.local.entities.CartWithMovie
-import com.rcflechas.shoppingcartapp.models.data.local.entities.Movie
+import com.rcflechas.shoppingcartapp.models.data.local.entities.CartWithMovieEntity
 import com.rcflechas.shoppingcartapp.models.repositories.CartRepository
-import com.rcflechas.shoppingcartapp.models.repositories.MovieRepository
 import com.rcflechas.shoppingcartapp.utilities.Event
 import com.rcflechas.shoppingcartapp.utilities.UIState
 import com.rcflechas.shoppingcartapp.views.binds.CartBind
@@ -39,7 +37,7 @@ class CartViewModel (private val cartRepository: CartRepository) : ViewModel() {
                 }.subscribeOn(Schedulers.io())
                 .subscribeBy(
                     onNext = {
-                        cartWithMovieListMutableLiveData.postValue(Event(UIState.Success(CartWithMovie.mapperCartWithMovieToCartWithMovieBindList(it))))
+                        cartWithMovieListMutableLiveData.postValue(Event(UIState.Success(it.map(CartWithMovieEntity::toBind))))
                     },
                     onError = {
                         cartWithMovieListMutableLiveData.postValue(
@@ -58,7 +56,7 @@ class CartViewModel (private val cartRepository: CartRepository) : ViewModel() {
     fun insertCartLocal(cart: CartBind) {
         subscriptions.add(
 
-            cartRepository.insertLocal(CartBind.mapperCartBindToCartEntity(cart)).doOnSubscribe {
+            cartRepository.insertLocal(cart.toEntity()).doOnSubscribe {
                 insertCartMutableLiveData.postValue(
                     UIState.Loading
                 )
@@ -82,7 +80,7 @@ class CartViewModel (private val cartRepository: CartRepository) : ViewModel() {
     fun updateCartLocal(cart: CartBind) {
         subscriptions.add(
 
-            cartRepository.insertLocal(CartBind.mapperCartBindToCartEntity(cart)).doOnSubscribe {
+            cartRepository.insertLocal(cart.toEntity()).doOnSubscribe {
                 updateCartMutableLiveData.postValue(
                     UIState.Loading
                 )
@@ -106,7 +104,7 @@ class CartViewModel (private val cartRepository: CartRepository) : ViewModel() {
     fun deleteCartLocal(cart: CartBind) {
         subscriptions.add(
 
-            cartRepository.deleteLocal(CartBind.mapperCartBindToCartEntity(cart)).doOnSubscribe {
+            cartRepository.deleteLocal(cart.toEntity()).doOnSubscribe {
                 deleteCartMutableLiveData.postValue(
                     UIState.Loading
                 )

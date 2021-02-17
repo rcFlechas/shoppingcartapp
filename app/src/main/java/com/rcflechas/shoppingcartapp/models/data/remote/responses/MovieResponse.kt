@@ -1,8 +1,10 @@
 package com.rcflechas.shoppingcartapp.models.data.remote.responses
 
 import androidx.annotation.Keep
-import com.rcflechas.shoppingcartapp.models.data.local.entities.Movie
+import com.rcflechas.shoppingcartapp.models.data.local.entities.MovieEntity
+import com.rcflechas.shoppingcartapp.models.data.local.mappers.EntityMapper
 import com.rcflechas.shoppingcartapp.views.binds.MovieBind
+import com.rcflechas.shoppingcartapp.views.mappers.BindMapper
 import com.squareup.moshi.Json
 import java.io.Serializable
 
@@ -64,43 +66,26 @@ data class MovieResponse(
     @Json(name = "vote_average")
     @field:Json(name = "vote_average")
     val voteAverage: Double = 0.0
-): Serializable {
-    companion object {
 
-        fun mapperMovieResponseToMovieBindList(movies: List<MovieResponse>): List<MovieBind> {
+): Serializable, BindMapper<MovieResponse,MovieBind>, EntityMapper<MovieResponse, MovieEntity> {
 
-            val list = mutableListOf<MovieBind>()
-            movies.forEach {
-                list.add(
-                    MovieBind(
-                        id = it.id,
-                        title = it.title,
-                        overView = it.overView,
-                        posterPath = it.posterPath,
-                        backdropPath = it.backdropPath,
-                        isAdult = it.isAdult
-                    )
-                )
-            }
-            return list.toList()
-        }
+    override fun toBind() = MovieBind(
+        id = id,
+        title = title,
+        overView = overView,
+        posterPath = posterPath,
+        backdropPath = backdropPath,
+        isAdult = isAdult
+    )
+    override fun List<MovieResponse>.toListBind() = map( MovieResponse::toBind)
 
-        fun mapperMovieResponseToMovieEntityList(movies: List<MovieResponse>): List<Movie> {
-
-            val list = mutableListOf<Movie>()
-            movies.forEach {
-                list.add(
-                    Movie(
-                        id = it.id,
-                        title = it.title,
-                        overView = it.overView,
-                        posterPath = it.posterPath,
-                        backdropPath = it.backdropPath,
-                        isAdult = it.isAdult
-                    )
-                )
-            }
-            return list.toList()
-        }
-    }
+    override fun toEntity() = MovieEntity(
+        id = id,
+        title = title,
+        overView = overView,
+        posterPath = posterPath,
+        backdropPath = backdropPath,
+        isAdult = isAdult
+    )
+    override fun List<MovieResponse>.toListEntity() = map( MovieResponse::toEntity)
 }

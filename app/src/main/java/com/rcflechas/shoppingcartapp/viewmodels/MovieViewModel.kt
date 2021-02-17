@@ -3,9 +3,7 @@ package com.rcflechas.shoppingcartapp.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.rcflechas.shoppingcartapp.models.data.local.entities.CartWithMovie
-import com.rcflechas.shoppingcartapp.models.data.local.entities.Movie
-import com.rcflechas.shoppingcartapp.models.data.local.entities.MovieWithCart
+import com.rcflechas.shoppingcartapp.models.data.local.entities.MovieWithCartEntity
 import com.rcflechas.shoppingcartapp.models.data.remote.responses.MovieResponse
 import com.rcflechas.shoppingcartapp.models.repositories.CartRepository
 import com.rcflechas.shoppingcartapp.models.repositories.MovieRepository
@@ -43,8 +41,7 @@ class MovieViewModel (private val movieRepository: MovieRepository, private val 
                 .subscribeOn(Schedulers.io())
                 .subscribeBy(
                     onSuccess = {
-                        movieRepository.insertAllLocal(MovieResponse.mapperMovieResponseToMovieEntityList(it.results))
-
+                        movieRepository.insertAllLocal(it.results.map(MovieResponse::toEntity))
                     },
                     onError = {
 
@@ -62,8 +59,7 @@ class MovieViewModel (private val movieRepository: MovieRepository, private val 
                 }.subscribeOn(Schedulers.io())
                 .subscribeBy(
                     onNext = {
-                        cartWithMovieListMutableLiveData.postValue(Event(UIState.Success(
-                            MovieWithCart.mapperMovieWithCartToMovieWithCartBindList(it))))
+                        cartWithMovieListMutableLiveData.postValue(Event(UIState.Success(it.map(MovieWithCartEntity::toBind))))
                     },
                     onError = {
                         cartWithMovieListMutableLiveData.postValue(
@@ -82,7 +78,7 @@ class MovieViewModel (private val movieRepository: MovieRepository, private val 
     fun insertCartLocal(cart: CartBind) {
         subscriptions.add(
 
-            cartRepository.insertLocal(CartBind.mapperCartBindToCartEntity(cart)).doOnSubscribe {
+            cartRepository.insertLocal(cart.toEntity()).doOnSubscribe {
                 insertCartMutableLiveData.postValue(
                     UIState.Loading
                 )
@@ -106,7 +102,7 @@ class MovieViewModel (private val movieRepository: MovieRepository, private val 
     fun updateCartLocal(cart: CartBind) {
         subscriptions.add(
 
-            cartRepository.insertLocal(CartBind.mapperCartBindToCartEntity(cart)).doOnSubscribe {
+            cartRepository.insertLocal(cart.toEntity()).doOnSubscribe {
                 updateCartMutableLiveData.postValue(
                     UIState.Loading
                 )
@@ -130,7 +126,7 @@ class MovieViewModel (private val movieRepository: MovieRepository, private val 
     fun deleteCartLocal(cart: CartBind) {
         subscriptions.add(
 
-            cartRepository.deleteLocal(CartBind.mapperCartBindToCartEntity(cart)).doOnSubscribe {
+            cartRepository.deleteLocal(cart.toEntity()).doOnSubscribe {
                 deleteCartMutableLiveData.postValue(
                     UIState.Loading
                 )

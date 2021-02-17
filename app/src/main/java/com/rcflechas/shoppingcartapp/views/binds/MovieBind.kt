@@ -1,5 +1,7 @@
 package com.rcflechas.shoppingcartapp.views.binds
 
+import com.rcflechas.shoppingcartapp.models.data.local.entities.MovieEntity
+import com.rcflechas.shoppingcartapp.models.data.local.mappers.EntityMapper
 import java.io.Serializable
 
 data class MovieBind(
@@ -10,4 +12,17 @@ data class MovieBind(
     val posterPath: String = String(),
     val backdropPath: String = String(),
     val isAdult: Boolean = false
-): Serializable
+
+): Serializable, EntityMapper<MovieBind, MovieEntity> {
+
+    override fun toEntity() = MovieEntity (
+        id = id,
+        title = title,
+        overView = overView,
+        posterPath = posterPath,
+        backdropPath = backdropPath,
+        isAdult = isAdult
+    )
+
+    override fun List<MovieBind>.toListEntity() = map( MovieBind::toEntity )
+}

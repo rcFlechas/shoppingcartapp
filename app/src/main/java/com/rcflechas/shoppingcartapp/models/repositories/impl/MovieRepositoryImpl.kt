@@ -3,8 +3,8 @@ package com.rcflechas.shoppingcartapp.models.repositories.impl
 import android.annotation.SuppressLint
 import android.util.Log
 import com.rcflechas.shoppingcartapp.models.data.local.dao.MovieDAO
-import com.rcflechas.shoppingcartapp.models.data.local.entities.Movie
-import com.rcflechas.shoppingcartapp.models.data.local.entities.MovieWithCart
+import com.rcflechas.shoppingcartapp.models.data.local.entities.MovieEntity
+import com.rcflechas.shoppingcartapp.models.data.local.entities.MovieWithCartEntity
 import com.rcflechas.shoppingcartapp.models.data.remote.api.MovieApi
 import com.rcflechas.shoppingcartapp.models.data.remote.responses.MovieResponse
 import com.rcflechas.shoppingcartapp.models.data.remote.responses.TheMovieDbResponse
@@ -19,10 +19,10 @@ class MovieRepositoryImpl(private val movieApi: MovieApi, private val movieDAO: 
 
     override fun getAllRemote(): Single<TheMovieDbResponse<MovieResponse>> = movieApi.getPopular()
 
-    override fun getAllLocal(): Flowable<List<Movie>> = movieDAO.getAll()
+    override fun getAllLocal(): Flowable<List<MovieEntity>> = movieDAO.getAll()
 
     @SuppressLint("CheckResult")
-    override fun insertAllLocal(movies: List<Movie>) {
+    override fun insertAllLocal(movies: List<MovieEntity>) {
         movieDAO.insertAll(movies)
             .subscribeOn(Schedulers.io())
             .subscribeBy(
@@ -35,15 +35,15 @@ class MovieRepositoryImpl(private val movieApi: MovieApi, private val movieDAO: 
             )
     }
 
-    override fun insertLocal(movie: Movie): Completable = movieDAO.insert(movie)
+    override fun insertLocal(movieEntity: MovieEntity): Completable = movieDAO.insert(movieEntity)
 
-    override fun getByIdLocal(id: Int): Single<Movie> = movieDAO.getById(id)
+    override fun getByIdLocal(id: Int): Single<MovieEntity> = movieDAO.getById(id)
 
     override fun deleteByIdLocal(id: Int): Completable = movieDAO.deleteById(id)
 
     override fun deleteAllLocal(): Completable = movieDAO.deleteAll()
 
-    override fun getMovieWithCartLocal(): Flowable<List<MovieWithCart>> = movieDAO.getMovieWithCart()
+    override fun getMovieWithCartLocal(): Flowable<List<MovieWithCartEntity>> = movieDAO.getMovieWithCart()
 
     companion object {
         const val TAG = "MovieRepositoryImpl"

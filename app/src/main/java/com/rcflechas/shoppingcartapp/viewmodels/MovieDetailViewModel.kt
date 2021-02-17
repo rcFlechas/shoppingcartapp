@@ -25,7 +25,7 @@ class MovieDetailViewModel (private val cartRepository: CartRepository) : ViewMo
     fun insertCartLocal(cart: CartBind) {
         subscriptions.add(
 
-            cartRepository.insertLocal(CartBind.mapperCartBindToCartEntity(cart)).doOnSubscribe {
+            cartRepository.insertLocal(cart.toEntity()).doOnSubscribe {
                 insertCartMutableLiveData.postValue(
                     UIState.Loading
                 )
@@ -49,7 +49,7 @@ class MovieDetailViewModel (private val cartRepository: CartRepository) : ViewMo
     fun updateCartLocal(cart: CartBind) {
         subscriptions.add(
 
-            cartRepository.insertLocal(CartBind.mapperCartBindToCartEntity(cart)).doOnSubscribe {
+            cartRepository.insertLocal(cart.toEntity()).doOnSubscribe {
                 updateCartMutableLiveData.postValue(
                     UIState.Loading
                 )
@@ -73,7 +73,7 @@ class MovieDetailViewModel (private val cartRepository: CartRepository) : ViewMo
     fun deleteCartLocal(cart: CartBind) {
         subscriptions.add(
 
-            cartRepository.deleteLocal(CartBind.mapperCartBindToCartEntity(cart)).doOnSubscribe {
+            cartRepository.deleteLocal(cart.toEntity()).doOnSubscribe {
                 deleteCartMutableLiveData.postValue(
                     UIState.Loading
                 )

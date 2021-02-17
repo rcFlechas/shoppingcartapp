@@ -1,10 +1,10 @@
 # Shopping Cart #
 
-This application simulates a shopping cart, displaying a list of movies as follows:
+This application simulates a shopping cartEntity, displaying a list of movieEntities as follows:
 
 ![](./screenshots/list.jpg )
 ![](./screenshots/list_add.jpg)
-![](./screenshots/cart.jpg)
+![](./screenshots/cartEntity.jpg)
 ![](./screenshots/cart_swiped.jpg)
 ![](./screenshots/detail.jpg)
 ![](./screenshots/detail_modify.jpg)
