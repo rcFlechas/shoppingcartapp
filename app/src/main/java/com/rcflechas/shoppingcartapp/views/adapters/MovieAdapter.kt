@@ -3,14 +3,13 @@ package com.rcflechas.shoppingcartapp.views.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil.DiffResult.NO_POSITION
 import com.bumptech.glide.request.RequestOptions
-import com.rcflechas.shoppingcartapp.R
 import com.rcflechas.shoppingcartapp.core.onClick
 import com.rcflechas.shoppingcartapp.core.setImageByUrl
+import com.rcflechas.shoppingcartapp.databinding.ItemMovieBinding
 import com.rcflechas.shoppingcartapp.models.data.remote.rest.TheMovieDB
 import com.rcflechas.shoppingcartapp.views.binds.MovieWithCartBind
-import kotlinx.android.synthetic.main.item_movie.view.*
 
 class MovieAdapter (
     val clickClosure: (MovieWithCartBind) -> Unit,
@@ -39,83 +38,94 @@ class MovieAdapter (
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_movie, parent, false)
-        return ViewHolder(v)
+
+        val binding = ItemMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val holder = ViewHolder(binding)
+
+        binding.root.onClick {
+
+            val position = holder.adapterPosition.takeIf { it != NO_POSITION } ?: return@onClick
+            clickClosure(elements[position])
+        }
+
+        binding.addMaterialButton.onClick {
+
+            val position = holder.adapterPosition.takeIf { it != NO_POSITION } ?: return@onClick
+            val movieWithCartBind = elements[position]
+            binding.addLinearLayoutCompat.visibility = View.GONE
+            binding.addRemoveLinearLayoutCompat.visibility = View.VISIBLE
+
+            movieWithCartBind.cart.amount++
+            addClosure(movieWithCartBind)
+        }
+
+        binding.addImageButton.onClick {
+
+            val position = holder.adapterPosition.takeIf { it != NO_POSITION } ?: return@onClick
+            val movieWithCartBind = elements[position]
+            movieWithCartBind.cart.amount++
+            addClosure(movieWithCartBind)
+        }
+
+        binding.removeImageButton.onClick {
+
+            val position = holder.adapterPosition.takeIf { it != NO_POSITION } ?: return@onClick
+            val movieWithCartBind = elements[position]
+            if (movieWithCartBind.cart.amount > 0) {
+
+                movieWithCartBind.cart.amount--
+                if (movieWithCartBind.cart.amount == 0) {
+                    binding.addLinearLayoutCompat.visibility = View.VISIBLE
+                    binding.addRemoveLinearLayoutCompat.visibility = View.GONE
+                }
+                removeClosure(movieWithCartBind)
+            }
+        }
+
+        return holder
     }
 
     override fun getItemCount(): Int {
         return dataItems.count()
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val movieWithCartBind = dataItems[position]
-        holder.bind(movieWithCartBind)
-        holder.bindClick(movieWithCartBind)
+    override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
+        val movieWithCartBind = elements[position]
+
+        when (holder) {
+            is ViewHolder -> holder.bind(movieWithCartBind)
+        }
     }
 
     override fun getItemId(position: Int): Long {
-        return dataItems[position].movie.id.toLong()
+        return elements[position].movie.id.toLong()
     }
 
     fun getItem(position: Int): MovieWithCartBind {
-        return dataItems[position]
+        return elements[position]
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(private val binding: ItemMovieBinding) : BaseViewHolder<MovieWithCartBind>(binding.root) {
 
-        fun bind(movieWithCartBind: MovieWithCartBind) {
+        override fun bind(item: MovieWithCartBind) {
 
-            itemView.movieImageView.setImageByUrl(
-                url = "${TheMovieDB.URL_IMAGE_W780}${movieWithCartBind.movie.posterPath}",
+            binding.movieImageView.setImageByUrl(
+                url = "${TheMovieDB.URL_IMAGE_W780}${item.movie.posterPath}",
                 options = RequestOptions().centerCrop()
             )
-            itemView.titleMovieTextView.text = movieWithCartBind.movie.title
-            itemView.overViewMovieTextView.text = movieWithCartBind.movie.overView
-            itemView.countTextView.text = movieWithCartBind.cart.amount.toString()
+            binding.titleMovieTextView.text = item.movie.title
+            binding.overViewMovieTextView.text = item.movie.overView
+            binding.countTextView.text = item.cart.amount.toString()
 
-            if (movieWithCartBind.cart.amount > 0) {
+            if (item.cart.amount > 0) {
 
-                itemView.addLinearLayoutCompat.visibility = View.GONE
-                itemView.addRemoveLinearLayoutCompat.visibility = View.VISIBLE
+                binding.addLinearLayoutCompat.visibility = View.GONE
+                binding.addRemoveLinearLayoutCompat.visibility = View.VISIBLE
             } else {
 
-                itemView.addLinearLayoutCompat.visibility = View.VISIBLE
-                itemView.addRemoveLinearLayoutCompat.visibility = View.GONE
+                binding.addLinearLayoutCompat.visibility = View.VISIBLE
+                binding.addRemoveLinearLayoutCompat.visibility = View.GONE
             }
         }
-
-        fun bindClick(movieWithCartBind: MovieWithCartBind) {
-
-            itemView.addMaterialButton.onClick {
-
-                itemView.addLinearLayoutCompat.visibility = View.GONE
-                itemView.addRemoveLinearLayoutCompat.visibility = View.VISIBLE
-
-                movieWithCartBind.cart.amount++
-                addClosure(movieWithCartBind)
-            }
-
-            itemView.onClick {
-                clickClosure(movieWithCartBind)
-            }
-
-            itemView.addImageButton.onClick {
-
-                movieWithCartBind.cart.amount++
-                addClosure(movieWithCartBind)
-            }
-
-            itemView.removeImageButton.onClick {
-                if (movieWithCartBind.cart.amount > 0) {
-
-                    movieWithCartBind.cart.amount--
-                    if (movieWithCartBind.cart.amount == 0) {
-                        itemView.addLinearLayoutCompat.visibility = View.VISIBLE
-                        itemView.addRemoveLinearLayoutCompat.visibility = View.GONE
-                    }
-                    removeClosure(movieWithCartBind)
-                }
-            }
-        }
-    }
+     }
 }

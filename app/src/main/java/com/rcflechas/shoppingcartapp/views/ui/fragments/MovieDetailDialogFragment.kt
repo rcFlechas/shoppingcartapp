@@ -5,24 +5,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.request.RequestOptions
 import com.rcflechas.shoppingcartapp.R
 import com.rcflechas.shoppingcartapp.core.onClick
 import com.rcflechas.shoppingcartapp.core.setImageByUrl
+import com.rcflechas.shoppingcartapp.databinding.FragmentMovieDetailDialogBinding
 import com.rcflechas.shoppingcartapp.models.data.remote.rest.TheMovieDB
 import com.rcflechas.shoppingcartapp.viewmodels.MovieDetailViewModel
 import com.rcflechas.shoppingcartapp.views.binds.CartBind
 import com.rcflechas.shoppingcartapp.views.binds.MovieWithCartBind
-import kotlinx.android.synthetic.main.cards_layout_amount.*
-import kotlinx.android.synthetic.main.cards_layout_description.*
-import kotlinx.android.synthetic.main.fragment_movie_detail_dialog.*
-import kotlinx.android.synthetic.main.fragment_movie_detail_dialog.titleTextView
-import kotlinx.android.synthetic.main.fragment_movie_detail_dialog.toolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MovieDetailDialogFragment : DialogFragment() {
+
+    private var _binding: FragmentMovieDetailDialogBinding? = null
+    private val binding get() = _binding
 
     private val movieDetailViewModel: MovieDetailViewModel by viewModel()
 
@@ -31,9 +31,10 @@ class MovieDetailDialogFragment : DialogFragment() {
         setStyle(STYLE_NORMAL, R.style.FullScreenDialogStyle)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): CoordinatorLayout? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movie_detail_dialog, container, false)
+        _binding = FragmentMovieDetailDialogBinding.inflate(inflater, container, false)
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,9 +47,9 @@ class MovieDetailDialogFragment : DialogFragment() {
     }
 
     private fun setupToolbar(view: View) {
-        toolbar.navigationIcon = ContextCompat.getDrawable(view.context, R.drawable.ic_close_24)
-        toolbar.setTitleTextColor(Color.WHITE)
-        toolbar.setNavigationOnClickListener {
+        binding?.toolbar?.navigationIcon = ContextCompat.getDrawable(view.context, R.drawable.ic_close_24)
+        binding?.toolbar?.setTitleTextColor(Color.WHITE)
+        binding?.toolbar?.setNavigationOnClickListener {
             dismiss()
         }
     }
@@ -56,53 +57,53 @@ class MovieDetailDialogFragment : DialogFragment() {
     private fun initUI(movieWithCartBind: MovieWithCartBind) {
         movieWithCartBind.run {
 
-            movieImageView.setImageByUrl(
+            binding?.movieImageView?.setImageByUrl(
                 url = "${TheMovieDB.URL_IMAGE_W780}${movie.backdropPath}",
                 options = RequestOptions().centerCrop()
             )
 
-            titleTextView.text = movie.title
-            descriptionTextView.text = movie.overView
+            binding?.titleTextView?.text = movie.title
+            binding?.includeCardsDescription?.descriptionTextView?.text = movie.overView
 
             if (cart.amount > 0) {
 
-                countTextView.text = cart.amount.toString()
-                actionMaterialButton.text = getString(R.string.title_update)
-                actionMaterialButton.isEnabled = false
+                binding?.includeCardsAmount?.countTextView?.text = cart.amount.toString()
+                binding?.includeCardsAmount?.actionMaterialButton?.text = getString(R.string.title_update)
+                binding?.includeCardsAmount?.actionMaterialButton?.isEnabled = false
             } else {
 
                 cart.amount++
-                countTextView.text = cart.amount.toString()
-                actionMaterialButton.text = getString(R.string.title_add)
-                actionMaterialButton.isEnabled = true
+                binding?.includeCardsAmount?.countTextView?.text = cart.amount.toString()
+                binding?.includeCardsAmount?.actionMaterialButton?.text = getString(R.string.title_add)
+                binding?.includeCardsAmount?.actionMaterialButton?.isEnabled = true
             }
 
-            addImageButton.onClick {
+            binding?.includeCardsAmount?.addImageButton?.onClick {
 
                 cart.amount++
-                countTextView.text = cart.amount.toString()
-                actionMaterialButton.isEnabled = true
+                binding?.includeCardsAmount?.countTextView?.text = cart.amount.toString()
+                binding?.includeCardsAmount?.actionMaterialButton?.isEnabled = true
             }
 
-            removeImageButton.onClick {
+            binding?.includeCardsAmount?.removeImageButton?.onClick {
 
                 when {
                     (cart.id == 0 && cart.amount > 1) -> {
 
                         movieWithCartBind.cart.amount--
-                        countTextView.text = movieWithCartBind.cart.amount.toString()
-                        actionMaterialButton.isEnabled = true
+                        binding?.includeCardsAmount?.countTextView?.text = movieWithCartBind.cart.amount.toString()
+                        binding?.includeCardsAmount?.actionMaterialButton?.isEnabled = true
                     }
                     (cart.id > 0 && cart.amount > 0) -> {
 
                         movieWithCartBind.cart.amount--
-                        countTextView.text = movieWithCartBind.cart.amount.toString()
-                        actionMaterialButton.isEnabled = true
+                        binding?.includeCardsAmount?.countTextView?.text = movieWithCartBind.cart.amount.toString()
+                        binding?.includeCardsAmount?.actionMaterialButton?.isEnabled = true
                     }
                 }
             }
 
-            actionMaterialButton.onClick {
+            binding?.includeCardsAmount?.actionMaterialButton?.onClick {
 
                 when {
 
@@ -128,9 +129,8 @@ class MovieDetailDialogFragment : DialogFragment() {
         dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
     }
 
-    companion object {
-        const val TAG = "MovieDetailDialogFragment"
-
-        fun newInstance(bundle: Bundle? = null): MovieDetailDialogFragment = MovieDetailDialogFragment().apply { arguments = bundle }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -2,7 +2,7 @@ package com.rcflechas.shoppingcartapp.views.adapters
 
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class CustomAdapter<T, VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<VH>() {
+abstract class CustomAdapter<T, VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<BaseViewHolder<*>>() {
     var elements: MutableList<T> = mutableListOf()
 
     fun animateTo(models: MutableList<T>) {

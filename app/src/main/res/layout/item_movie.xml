@@ -14,7 +14,7 @@
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/movieImageView"
+            android:id="@+id/movie_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/dimen_8dp"
@@ -29,7 +29,7 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/titleMovieTextView"
+                android:id="@+id/title_movie_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -39,7 +39,7 @@
                 tools:text="Cur nuclear vexatum iacere peregrinationes?" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/overViewMovieTextView"
+                android:id="@+id/over_view_movie_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_8dp"
@@ -50,7 +50,7 @@
                 tools:text="Cur nuclear vexatum iacere peregrinationes Detriuss experimentum, Cur nuclear vexatum iacere peregrinationes Detriuss experimentum, Cur nuclear vexatum iacere peregrinationes Detriuss experimentum, Cur nuclear vexatum iacere peregrinationes Detriuss experimentum, tanquam varius cobaltum.A falsis, habitio raptus abactor.?" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/addRemoveLinearLayoutCompat"
+                android:id="@+id/add_remove_linear_layout_compat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dimen_8dp"
@@ -62,7 +62,7 @@
                 android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/removeImageButton"
+                    android:id="@+id/remove_image_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -70,7 +70,7 @@
                     android:src="@drawable/ic_remove_40" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/countTextView"
+                    android:id="@+id/count_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/dimen_8dp"
@@ -79,7 +79,7 @@
                     android:textColor="@color/colorAccent" />
 
                 <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/addImageButton"
+                    android:id="@+id/add_image_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -89,7 +89,7 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/addLinearLayoutCompat"
+                android:id="@+id/add_linear_layout_compat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/dimen_8dp"
@@ -99,7 +99,7 @@
                 android:visibility="visible">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/addMaterialButton"
+                    android:id="@+id/add_material_button"
                     android:layout_width="@dimen/dimen_104dp"
                     android:layout_height="@dimen/dimen_40dp"
                     android:text="Add"

@@ -8,7 +8,7 @@
     tools:context=".views.ui.fragments.CartFragment">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/containerToolbar"
+        android:id="@+id/container_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
@@ -31,7 +31,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
+        android:id="@+id/nested_scrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
@@ -39,7 +39,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/containerToolbar">
+        app:layout_constraintTop_toBottomOf="@id/container_toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,17 +47,19 @@
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/moviesRecyclerView"
+                android:id="@+id/movies_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:listitem="@layout/item_movie" />
 
-            <include layout="@layout/cards_layout_clear" />
+            <include
+                android:id="@+id/include_cards_clear"
+                layout="@layout/cards_layout_clear" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progress_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
@@ -67,7 +69,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
-        android:id="@+id/includeEmptyView"
+        android:id="@+id/include_empty_view"
         layout="@layout/empty_view"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

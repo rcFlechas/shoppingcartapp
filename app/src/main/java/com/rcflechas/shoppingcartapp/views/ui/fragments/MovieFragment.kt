@@ -15,22 +15,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rcflechas.shoppingcartapp.R
 import com.rcflechas.shoppingcartapp.core.isConnect
 import com.rcflechas.shoppingcartapp.core.setBadge
+import com.rcflechas.shoppingcartapp.databinding.FragmentMovieBinding
 import com.rcflechas.shoppingcartapp.utilities.UIState
 import com.rcflechas.shoppingcartapp.viewmodels.MovieViewModel
 import com.rcflechas.shoppingcartapp.views.adapters.MovieAdapter
 import com.rcflechas.shoppingcartapp.views.binds.CartBind
 import com.rcflechas.shoppingcartapp.views.binds.MovieWithCartBind
-import kotlinx.android.synthetic.main.empty_view.*
-import kotlinx.android.synthetic.main.fragment_movie.*
-import kotlinx.android.synthetic.main.fragment_movie.includeEmptyView
-import kotlinx.android.synthetic.main.fragment_movie.moviesRecyclerView
-import kotlinx.android.synthetic.main.fragment_movie.toolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MovieFragment : Fragment() {
 
+    private var _binding: FragmentMovieBinding? = null
+    private val binding get() = _binding
+
     private val movieViewModel: MovieViewModel by viewModel()
-    private lateinit var  movieAdapter: MovieAdapter
+    private lateinit var movieAdapter: MovieAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +39,8 @@ class MovieFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movie, container, false)
+        _binding = FragmentMovieBinding.inflate(inflater, container, false)
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -84,7 +84,7 @@ class MovieFragment : Fragment() {
         })
 
         movieAdapter.setHasStableIds(true)
-        moviesRecyclerView.apply {
+        binding?.moviesRecyclerView?.apply {
             layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
             addItemDecoration(DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL))
             setHasFixedSize(true)
@@ -93,12 +93,12 @@ class MovieFragment : Fragment() {
     }
 
     private fun setupToolbar() {
-        toolbar.setTitle(R.string.app_name)
-        toolbar.inflateMenu(R.menu.menu)
+        binding?.toolbar?.setTitle(R.string.app_name)
+        binding?.toolbar?.inflateMenu(R.menu.menu)
 
         setBadge()
 
-        toolbar.setOnMenuItemClickListener {
+        binding?.toolbar?.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.menu_main_cart -> {
                     findNavController().navigate(R.id.action_movieFragment_to_cartFragment)
@@ -110,7 +110,7 @@ class MovieFragment : Fragment() {
 
     private fun setBadge(count: Int = 0) {
 
-        toolbar.menu[0].setBadge(
+        binding?.toolbar?.menu?.get(0)?.setBadge(
             context = requireContext(),
             count = count,
             image = R.drawable.ic_cart_32
@@ -120,14 +120,14 @@ class MovieFragment : Fragment() {
     private fun countMoviesCart(movieWithCartBind: List<MovieWithCartBind>) = movieWithCartBind.sumBy { it.cart.amount }
 
     private fun dataEmpty(text: String = String()) {
-        nestedScrollView.visibility = View.GONE
-        includeEmptyView.visibility = View.VISIBLE
-        loadingTextView.text = text
+        binding?.nestedScrollView?.visibility = View.GONE
+        binding?.includeEmptyView?.root?.visibility = View.VISIBLE
+        binding?.includeEmptyView?.loadingTextView?.text = text
     }
 
     private fun dataNoEmpty() {
-        nestedScrollView.visibility = View.VISIBLE
-        includeEmptyView.visibility = View.GONE
+        binding?.nestedScrollView?.visibility = View.VISIBLE
+        binding?.includeEmptyView?.root?.visibility = View.GONE
     }
 
     private fun setupHandler() {
@@ -159,8 +159,8 @@ class MovieFragment : Fragment() {
                     }
                     is UIState.Error -> {
 
-                        includeEmptyView.visibility = View.VISIBLE
-                        loadingTextView.text = getString(R.string.message_connection_error)
+                        binding?.includeEmptyView?.root?.visibility = View.VISIBLE
+                        binding?.includeEmptyView?.loadingTextView?.text = getString(R.string.message_connection_error)
                         Log.i(TAG, "--- ${status.message}")
                     }
                 }
@@ -216,9 +216,12 @@ class MovieFragment : Fragment() {
         })
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     companion object {
         const val TAG = "MovieFragment"
-
-        fun newInstance(bundle: Bundle? = null): MovieFragment = MovieFragment().apply { arguments = bundle }
     }
 }

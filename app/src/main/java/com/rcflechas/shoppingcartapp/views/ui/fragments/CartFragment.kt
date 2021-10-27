@@ -17,18 +17,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.rcflechas.shoppingcartapp.R
 import com.rcflechas.shoppingcartapp.core.onClick
+import com.rcflechas.shoppingcartapp.databinding.FragmentCartBinding
 import com.rcflechas.shoppingcartapp.utilities.UIState
 import com.rcflechas.shoppingcartapp.viewmodels.CartViewModel
 import com.rcflechas.shoppingcartapp.views.adapters.MovieAdapter
 import com.rcflechas.shoppingcartapp.views.binds.CartBind
 import com.rcflechas.shoppingcartapp.views.binds.MovieWithCartBind
 import com.rcflechas.shoppingcartapp.views.widget.SwipeToDeleteCallback
-import kotlinx.android.synthetic.main.cards_layout_clear.*
-import kotlinx.android.synthetic.main.empty_view.*
-import kotlinx.android.synthetic.main.fragment_cart.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CartFragment : Fragment() {
+
+    private var _binding: FragmentCartBinding? = null
+    private val binding get() = _binding
 
     private val cartViewModel: CartViewModel by viewModel()
     private lateinit var  movieAdapter: MovieAdapter
@@ -41,7 +42,8 @@ class CartFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cart, container, false)
+        _binding = FragmentCartBinding.inflate(inflater, container, false)
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,20 +62,19 @@ class CartFragment : Fragment() {
         setupRecyclerView()
         setupSwipe()
 
-        clearMaterialButton.onClick {
+        binding?.includeCardsClear?.clearMaterialButton?.onClick {
             cartViewModel.deleteCartAllLocal()
         }
     }
 
     private fun setupToolbar() {
 
-        toolbar.navigationIcon = view?.context?.let { ContextCompat.getDrawable(it, R.drawable.ic_back_24) }
-        toolbar.setTitle(R.string.title_cart)
-        toolbar.setTitleTextColor(Color.WHITE)
-        toolbar.setNavigationOnClickListener {
+        binding?.toolbar?.navigationIcon = view?.context?.let { ContextCompat.getDrawable(it, R.drawable.ic_back_24) }
+        binding?.toolbar?.setTitle(R.string.title_cart)
+        binding?.toolbar?.setTitleTextColor(Color.WHITE)
+        binding?.toolbar?.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
-
     }
 
     private fun setupRecyclerView() {
@@ -99,7 +100,7 @@ class CartFragment : Fragment() {
         })
 
         movieAdapter.setHasStableIds(true)
-        moviesRecyclerView.apply {
+        binding?.moviesRecyclerView?.apply {
             layoutManager = LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false)
             addItemDecoration(DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL))
             setHasFixedSize(true)
@@ -129,7 +130,7 @@ class CartFragment : Fragment() {
                     movieAdapter.animateTo(data)
                     if (position == 0) {
 
-                        moviesRecyclerView?.let {
+                        binding?.moviesRecyclerView?.let {
                             val layoutManager = it.layoutManager as LinearLayoutManager
                             layoutManager.scrollToPosition(0)
                         }
@@ -140,18 +141,18 @@ class CartFragment : Fragment() {
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(moviesRecyclerView)
+        itemTouchHelper.attachToRecyclerView(binding?.moviesRecyclerView)
     }
 
     private fun dataEmpty(text: String = String()) {
-        nestedScrollView.visibility = View.GONE
-        includeEmptyView.visibility = View.VISIBLE
-        loadingTextView.text = text
+        binding?.nestedScrollView?.visibility = View.GONE
+        binding?.includeEmptyView?.root?.visibility = View.VISIBLE
+        binding?.includeEmptyView?.loadingTextView?.text = text
     }
 
     private fun dataNoEmpty() {
-        nestedScrollView.visibility = View.VISIBLE
-        includeEmptyView.visibility = View.GONE
+        binding?.nestedScrollView?.visibility = View.VISIBLE
+        binding?.includeEmptyView?.root?.visibility = View.GONE
     }
 
     private fun setupHandler() {
@@ -182,8 +183,8 @@ class CartFragment : Fragment() {
                     }
                     is UIState.Error -> {
 
-                        includeEmptyView.visibility = View.VISIBLE
-                        loadingTextView.text = getString(R.string.message_connection_error)
+                        binding?.includeEmptyView?.root?.visibility = View.VISIBLE
+                        binding?.includeEmptyView?.loadingTextView?.text = getString(R.string.message_connection_error)
                         Log.i(TAG, "--- ${status.message}")
                     }
                 }
@@ -259,9 +260,12 @@ class CartFragment : Fragment() {
         })
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     companion object {
         const val TAG = "CartFragment"
-
-        fun newInstance(bundle: Bundle? = null): CartFragment = CartFragment().apply { arguments = bundle }
     }
 }

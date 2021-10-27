@@ -8,7 +8,7 @@
     style="@style/backgroundView">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/containerToolbar"
+        android:id="@+id/container_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -43,7 +43,7 @@
                     android:layout_height="200dp">
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/movieImageView"
+                        android:id="@+id/movie_image_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
@@ -56,7 +56,7 @@
                         android:alpha="0.1"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/titleTextView"
+                        android:id="@+id/title_text_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="25sp"
@@ -68,9 +68,13 @@
                         tools:text="Titulo de la conferencia"/>
                 </RelativeLayout>
 
-                <include layout="@layout/cards_layout_description" />
+                <include
+                    android:id="@+id/include_cards_description"
+                    layout="@layout/cards_layout_description" />
 
-                <include layout="@layout/cards_layout_amount" />
+                <include
+                    android:id="@+id/include_cards_amount"
+                    layout="@layout/cards_layout_amount" />
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

@@ -56,15 +56,6 @@ object RetrofitFactory {
             }.build()
         }
 
-    /*private val client =
-        OkHttpClient.Builder().apply {
-            connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-            writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
-            readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
-            retryOnConnectionFailure(true)
-        }.build()*/
-
-
     fun retrofit(baseUrl : String) : Retrofit = Retrofit.Builder()
         .client(client)
         .baseUrl(baseUrl)

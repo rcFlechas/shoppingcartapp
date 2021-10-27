@@ -8,7 +8,7 @@
     tools:context=".views.ui.fragments.MovieFragment">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/containerToolbar"
+        android:id="@+id/container_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
@@ -31,24 +31,24 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
+        android:id="@+id/nested_scrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/containerToolbar">
+        app:layout_constraintTop_toBottomOf="@id/container_toolbar">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/moviesRecyclerView"
+            android:id="@+id/movies_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/item_movie" />
     </androidx.core.widget.NestedScrollView>
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progress_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
@@ -58,7 +58,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
-        android:id="@+id/includeEmptyView"
+        android:id="@+id/include_empty_view"
         layout="@layout/empty_view"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
