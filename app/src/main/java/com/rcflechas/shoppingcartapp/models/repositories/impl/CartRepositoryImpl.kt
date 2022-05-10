@@ -7,8 +7,11 @@ import com.rcflechas.shoppingcartapp.models.repositories.CartRepository
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
+import javax.inject.Inject
 
-class CartRepositoryImpl (private val cartDAO: CartDAO) : CartRepository {
+class CartRepositoryImpl @Inject constructor(
+    private val cartDAO: CartDAO
+) : CartRepository {
 
     override fun getCartWithMovieLocal(): Flowable<List<CartWithMovieEntity>> = cartDAO.getCartWithMovie()
 

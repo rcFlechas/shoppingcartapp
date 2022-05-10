@@ -6,11 +6,16 @@ import androidx.lifecycle.ViewModel
 import com.rcflechas.shoppingcartapp.models.repositories.CartRepository
 import com.rcflechas.shoppingcartapp.utilities.UIState
 import com.rcflechas.shoppingcartapp.views.binds.CartBind
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class MovieDetailViewModel (private val cartRepository: CartRepository) : ViewModel() {
+@HiltViewModel
+class MovieDetailViewModel @Inject constructor (
+    private val cartRepository: CartRepository
+) : ViewModel() {
 
     private val insertCartMutableLiveData: MutableLiveData<UIState> = MutableLiveData()
     private val updateCartMutableLiveData: MutableLiveData<UIState> = MutableLiveData()

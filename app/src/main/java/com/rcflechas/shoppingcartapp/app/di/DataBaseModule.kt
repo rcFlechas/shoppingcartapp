@@ -1,11 +1,38 @@
 package com.rcflechas.shoppingcartapp.app.di
 
+import android.content.Context
 import androidx.room.Room
 import com.rcflechas.shoppingcartapp.models.data.local.DataBase
-import org.koin.dsl.module
+import com.rcflechas.shoppingcartapp.models.data.local.dao.CartDAO
+import com.rcflechas.shoppingcartapp.models.data.local.dao.MovieDAO
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-val roomModule = module {
-    single { Room.databaseBuilder(get(), DataBase::class.java, "database_movies").build() }
-    single { get<DataBase>().movieDAO() }
-    single { get<DataBase>().cartDAO() }
+@InstallIn(SingletonComponent::class)
+@Module
+object DataBaseModule {
+
+    @Provides
+    @Singleton
+    fun provideDataBase(@ApplicationContext context: Context): DataBase {
+        return Room.databaseBuilder(
+            context,
+            DataBase::class.java,
+            "database_movies"
+        ).build()
+    }
+
+    @Provides
+    fun provideMovieDAO(dataBase: DataBase): MovieDAO {
+        return dataBase.movieDAO()
+    }
+
+    @Provides
+    fun provideCartDAO(dataBase: DataBase): CartDAO {
+        return dataBase.cartDAO()
+    }
 }

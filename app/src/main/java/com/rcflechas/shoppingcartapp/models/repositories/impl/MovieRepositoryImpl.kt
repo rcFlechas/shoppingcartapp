@@ -14,8 +14,12 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class MovieRepositoryImpl(private val movieApi: MovieApi, private val movieDAO: MovieDAO) : MovieRepository {
+class MovieRepositoryImpl @Inject constructor(
+    private val movieApi: MovieApi,
+    private val movieDAO: MovieDAO
+) : MovieRepository {
 
     override fun getAllRemote(): Single<TheMovieDbResponse<MovieResponse>> = movieApi.getPopular()
 

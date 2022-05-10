@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.request.RequestOptions
 import com.rcflechas.shoppingcartapp.R
 import com.rcflechas.shoppingcartapp.core.onClick
@@ -17,14 +18,15 @@ import com.rcflechas.shoppingcartapp.models.data.remote.rest.TheMovieDB
 import com.rcflechas.shoppingcartapp.viewmodels.MovieDetailViewModel
 import com.rcflechas.shoppingcartapp.views.binds.CartBind
 import com.rcflechas.shoppingcartapp.views.binds.MovieWithCartBind
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MovieDetailDialogFragment : DialogFragment() {
 
     private var _binding: FragmentMovieDetailDialogBinding? = null
     private val binding get() = _binding
 
-    private val movieDetailViewModel: MovieDetailViewModel by viewModel()
+    private val movieDetailViewModel: MovieDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

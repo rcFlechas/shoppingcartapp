@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.get
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,14 +22,15 @@ import com.rcflechas.shoppingcartapp.viewmodels.MovieViewModel
 import com.rcflechas.shoppingcartapp.views.adapters.MovieAdapter
 import com.rcflechas.shoppingcartapp.views.binds.CartBind
 import com.rcflechas.shoppingcartapp.views.binds.MovieWithCartBind
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MovieFragment : Fragment() {
 
     private var _binding: FragmentMovieBinding? = null
     private val binding get() = _binding
 
-    private val movieViewModel: MovieViewModel by viewModel()
+    private val movieViewModel: MovieViewModel by viewModels()
     private lateinit var movieAdapter: MovieAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
